@@ -1,6 +1,6 @@
 // ============================================================
 // TURN MANAGER — Sistema de turnos por fases
-// Fases: movement → trivia → combat → resolution
+// Fases: filibustero_move → trivia → player_move → combat → resolution
 // Lados: 'aliado' (jugador) | 'filibustero' (IA)
 // ============================================================
 
@@ -20,20 +20,29 @@ export const PHASE_LABELS = {
   resolution:       'Resolución',
 };
 
-import Phaser from 'phaser';
+// Mini EventEmitter nativo — no depende de Phaser
+class EventEmitter {
+  constructor() { this._listeners = {}; }
+  on(event, fn)  { (this._listeners[event] = this._listeners[event] || []).push(fn); return this; }
+  off(event, fn) { if (this._listeners[event]) this._listeners[event] = this._listeners[event].filter(f => f !== fn); }
+  emit(event, ...args) { (this._listeners[event] || []).forEach(fn => fn(...args)); }
+  once(event, fn) {
+    const wrap = (...args) => { fn(...args); this.off(event, wrap); };
+    this.on(event, wrap);
+  }
+}
 
-export class TurnManager extends Phaser.EventEmitter {
+export class TurnManager extends EventEmitter {
   constructor() {
     super();
-    this.turn       = 1;
-    this.phase      = PHASES.FILIBUSTERO_MOVE;
-    this.bonusBank  = { combat: 0, move: 0, estetic: 0 };
-    this.maxMoves   = 3;   // hexes por turno (aliado)
-    this.movesLeft  = 3;
-    this.log        = [];
+    this.turn      = 1;
+    this.phase     = PHASES.FILIBUSTERO_MOVE;
+    this.bonusBank = { combat: 0, move: 0, estetic: 0 };
+    this.maxMoves  = 3;
+    this.movesLeft = 3;
+    this.log       = [];
   }
 
-  // Avanzar a la siguiente fase
   nextPhase() {
     const order = [
       PHASES.FILIBUSTERO_MOVE,
@@ -52,14 +61,13 @@ export class TurnManager extends Phaser.EventEmitter {
       this.phase = order[idx + 1];
       if (this.phase === PHASES.PLAYER_MOVE) {
         this.movesLeft = this.maxMoves + this.bonusBank.move;
-        this.bonusBank.move = 0; // consumir bono de movimiento
+        this.bonusBank.move = 0;
       }
     }
     this.emit('phaseChange', this.phase, this.turn);
     return this.phase;
   }
 
-  // Agregar bono al banco
   addBonus(type, amount) {
     if (this.bonusBank[type] !== undefined) {
       this.bonusBank[type] += amount;
@@ -67,7 +75,6 @@ export class TurnManager extends Phaser.EventEmitter {
     }
   }
 
-  // Consumir bono de combate
   consumeCombatBonus() {
     const b = this.bonusBank.combat;
     this.bonusBank.combat = 0;
@@ -75,7 +82,6 @@ export class TurnManager extends Phaser.EventEmitter {
     return b;
   }
 
-  // Tirada D20 + modificador
   rollD20(modifier = 0) {
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + modifier;
@@ -98,9 +104,7 @@ export class TurnManager extends Phaser.EventEmitter {
     if (this.movesLeft > 0) {
       this.movesLeft--;
       this.emit('movesUpdated', this.movesLeft);
-      if (this.movesLeft === 0) {
-        this.emit('movesExhausted');
-      }
+      if (this.movesLeft === 0) this.emit('movesExhausted');
     }
   }
 }
