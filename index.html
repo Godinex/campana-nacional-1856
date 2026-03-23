@@ -6,188 +6,175 @@
   <title>La Campaña Nacional 1856–1857</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
+    html, body {
       background: #1a0f00;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Georgia', serif;
+      width: 100%; height: 100%;
       overflow: hidden;
+      font-family: 'Georgia', serif;
     }
-    #game-container {
-      position: relative;
+    /* Phaser monta su canvas aquí */
+    #game-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
     }
-    canvas {
-      display: block;
-    }
-    #ui-overlay {
-      position: absolute;
+    /* Todo el UI flota encima del canvas */
+    #ui-layer {
+      position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
+      z-index: 10;
     }
     #title-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
-      background: linear-gradient(180deg, rgba(20,10,0,0.95) 0%, rgba(20,10,0,0.0) 100%);
-      padding: 12px 20px;
+      background: linear-gradient(180deg, rgba(20,10,0,0.92) 0%, transparent 100%);
+      padding: 10px 20px 20px;
       color: #d4a843;
-      font-size: 18px;
+      font-size: 17px;
       letter-spacing: 3px;
       text-transform: uppercase;
       text-shadow: 0 0 10px rgba(212,168,67,0.5);
-      pointer-events: none;
       text-align: center;
     }
     #title-bar span {
-      font-size: 11px;
+      font-size: 10px;
       color: #a07830;
       display: block;
       letter-spacing: 5px;
       margin-top: 2px;
     }
+    #bonus-bank {
+      position: absolute;
+      top: 70px; left: 16px;
+      background: rgba(15,8,0,0.88);
+      border: 1px solid #5a3a10;
+      border-radius: 4px;
+      padding: 8px 12px;
+      color: #d4a843;
+      font-size: 11px;
+      min-width: 150px;
+    }
+    #bonus-bank h3 {
+      font-size: 12px; color: #f0c060;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #5a3a10;
+      padding-bottom: 3px; letter-spacing: 1px;
+    }
+    .bonus-item {
+      display: flex; justify-content: space-between; margin: 3px 0;
+    }
+    .bonus-value { color: #7fc47f; font-weight: bold; }
+    #hex-info {
+      position: absolute;
+      top: 70px; right: 16px;
+      background: rgba(15,8,0,0.88);
+      border: 1px solid #5a3a10;
+      border-radius: 4px;
+      padding: 8px 12px;
+      color: #d4a843;
+      font-size: 11px;
+      min-width: 170px;
+      display: none;
+    }
+    #hex-info h3 { font-size: 13px; color: #f0c060; margin-bottom: 5px; border-bottom: 1px solid #5a3a10; padding-bottom: 3px; }
+    #hex-info p  { margin: 2px 0; color: #c8a060; }
     #status-bar {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      background: linear-gradient(0deg, rgba(20,10,0,0.95) 0%, rgba(20,10,0,0.0) 100%);
-      padding: 10px 20px;
-      color: #c8a060;
-      font-size: 12px;
-      letter-spacing: 1px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      pointer-events: none;
+      background: linear-gradient(0deg, rgba(15,8,0,0.92) 0%, transparent 100%);
+      padding: 18px 16px 8px;
+      color: #c8a060; font-size: 11px; letter-spacing: 1px;
+      display: flex; justify-content: space-between; align-items: flex-end;
     }
-    #hex-info {
+    /* Log y botón tienen pointer-events propios */
+    #log-panel {
       position: absolute;
-      top: 80px; right: 20px;
-      background: rgba(20,10,0,0.85);
-      border: 1px solid #5a3a10;
-      border-radius: 4px;
-      padding: 10px 14px;
-      color: #d4a843;
-      font-size: 12px;
-      min-width: 160px;
-      display: none;
+      bottom: 36px; left: 16px;
+      background: rgba(15,8,0,0.85);
+      border: 1px solid #5a3a10; border-radius: 4px;
+      padding: 6px 10px;
+      min-width: 210px; max-width: 270px;
+      max-height: 120px; overflow-y: auto;
+      font-size: 10px; color: #a89060;
+      pointer-events: auto;
     }
-    #hex-info h3 {
-      font-size: 14px;
-      color: #f0c060;
-      margin-bottom: 6px;
-      border-bottom: 1px solid #5a3a10;
-      padding-bottom: 4px;
-    }
-    #hex-info p {
-      margin: 3px 0;
-      color: #c8a060;
-    }
-    #hex-info .terrain-label {
-      display: inline-block;
-      padding: 1px 6px;
-      border-radius: 3px;
-      font-size: 11px;
-      margin-top: 4px;
-    }
-    #bonus-bank {
+    #end-turn-btn {
       position: absolute;
-      top: 80px; left: 20px;
-      background: rgba(20,10,0,0.85);
-      border: 1px solid #5a3a10;
-      border-radius: 4px;
-      padding: 10px 14px;
-      color: #d4a843;
-      font-size: 12px;
-      min-width: 140px;
+      bottom: 36px; right: 16px;
+      background: #3a1a00; border: 1px solid #d4a843; border-radius: 4px;
+      color: #d4a843; font-family: Georgia, serif; font-size: 11px;
+      padding: 7px 14px; cursor: pointer; letter-spacing: 1px;
+      pointer-events: auto;
+      transition: background 0.2s;
     }
-    #bonus-bank h3 {
-      font-size: 13px;
-      color: #f0c060;
-      margin-bottom: 6px;
-      border-bottom: 1px solid #5a3a10;
-      padding-bottom: 4px;
-      letter-spacing: 1px;
-    }
-    .bonus-item {
-      display: flex;
-      justify-content: space-between;
-      margin: 3px 0;
-      font-size: 11px;
-    }
-    .bonus-value {
-      color: #7fc47f;
-      font-weight: bold;
-    }
+    #end-turn-btn:hover { background: #5a2a00; }
     #turn-indicator {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(20,10,0,0.92);
-      border: 2px solid #d4a843;
-      border-radius: 6px;
-      padding: 20px 40px;
-      color: #d4a843;
-      font-size: 22px;
-      letter-spacing: 3px;
-      text-align: center;
-      display: none;
-      text-transform: uppercase;
+      background: rgba(15,8,0,0.93);
+      border: 2px solid #d4a843; border-radius: 6px;
+      padding: 18px 36px;
+      color: #d4a843; font-size: 20px;
+      letter-spacing: 3px; text-align: center;
+      text-transform: uppercase; display: none;
     }
     #turn-indicator span {
-      display: block;
-      font-size: 13px;
-      color: #a07830;
-      letter-spacing: 2px;
-      margin-top: 6px;
+      display: block; font-size: 12px;
+      color: #a07830; letter-spacing: 2px; margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <div id="game-container">
-    <div id="ui-overlay">
-      <div id="title-bar">
-        La Campaña Nacional
-        <span>Centroamérica · 1856 – 1857</span>
+  <!-- Phaser canvas goes here -->
+  <div id="game-canvas"></div>
+
+  <!-- UI layer on top -->
+  <div id="ui-layer">
+    <div id="title-bar">
+      La Campaña Nacional
+      <span>Centroamérica · 1856 – 1857</span>
+    </div>
+
+    <div id="bonus-bank">
+      <h3>⚔ Banco de Bonos</h3>
+      <div class="bonus-item"><span>Combate:</span><span class="bonus-value" id="bonus-combat">+0</span></div>
+      <div class="bonus-item"><span>Movimiento:</span><span class="bonus-value" id="bonus-move">+0</span></div>
+      <div class="bonus-item"><span>Estético:</span><span class="bonus-value" id="bonus-estetic">0</span></div>
+      <div class="bonus-item" style="margin-top:6px;border-top:1px solid #5a3a10;padding-top:5px;">
+        <span>Turno:</span><span id="turn-num" style="color:#f0c060">1</span>
       </div>
-      <div id="bonus-bank">
-        <h3>⚔ Banco de Bonos</h3>
-        <div class="bonus-item">
-          <span>Combate:</span><span class="bonus-value" id="bonus-combat">+0</span>
-        </div>
-        <div class="bonus-item">
-          <span>Movimiento:</span><span class="bonus-value" id="bonus-move">+0</span>
-        </div>
-        <div class="bonus-item">
-          <span>Estético:</span><span class="bonus-value" id="bonus-estetic">0</span>
-        </div>
-        <div class="bonus-item" style="margin-top:8px; border-top:1px solid #5a3a10; padding-top:6px;">
-          <span>Turno:</span><span id="turn-num" style="color:#f0c060">1</span>
-        </div>
-        <div class="bonus-item">
-          <span>Fase:</span><span id="phase-label" style="color:#f0c060">Movimiento</span>
-        </div>
-        <div class="bonus-item">
-          <span>Mov. restantes:</span><span class="bonus-value" id="moves-left">3</span>
-        </div>
+      <div class="bonus-item">
+        <span>Fase:</span><span id="phase-label" style="color:#f0c060">—</span>
       </div>
-      <div id="hex-info">
-        <h3 id="hex-name">—</h3>
-        <p id="hex-terrain">Terreno: —</p>
-        <p id="hex-movement">Costo mov.: —</p>
-        <p id="hex-note">—</p>
-      </div>
-      <div id="turn-indicator">
-        Turno Filibustero
-        <span>Walker avanza...</span>
-      </div>
-      <div id="status-bar">
-        <div id="status-left">Haz clic en un hexágono para explorar</div>
-        <div id="status-right">D20 Sistema · Sprint 1</div>
+      <div class="bonus-item">
+        <span>Mov. restantes:</span><span class="bonus-value" id="moves-left">3</span>
       </div>
     </div>
+
+    <div id="hex-info">
+      <h3 id="hex-name">—</h3>
+      <p id="hex-terrain">Terreno: —</p>
+      <p id="hex-movement">Costo mov.: —</p>
+      <p id="hex-note" style="font-style:italic;margin-top:4px;font-size:10px;color:#906840"></p>
+    </div>
+
+    <div id="turn-indicator">
+      Turno Filibustero
+      <span>Walker avanza...</span>
+    </div>
+
+    <div id="log-panel"></div>
+    <button id="end-turn-btn">Terminar Movimiento</button>
+
+    <div id="status-bar">
+      <div id="status-left">Haz clic en una unidad aliada para moverla</div>
+      <div id="status-right">Campaña Nacional 1856 · D20</div>
+    </div>
   </div>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

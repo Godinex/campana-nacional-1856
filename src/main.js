@@ -4,10 +4,14 @@ import { PreloadScene } from './scenes/PreloadScene.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: 1200,
-  height: 750,
+  width: window.innerWidth,
+  height: window.innerHeight,
   backgroundColor: '#1a0f00',
-  parent: 'game-container',
+  parent: 'game-canvas',
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
   scene: [PreloadScene, MapScene],
   render: {
     antialias: true,

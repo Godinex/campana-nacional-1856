@@ -20,6 +20,8 @@ export const PHASE_LABELS = {
   resolution:       'Resolución',
 };
 
+import Phaser from 'phaser';
+
 export class TurnManager extends Phaser.EventEmitter {
   constructor() {
     super();
