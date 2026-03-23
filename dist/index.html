@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Campaña Nacional 1856–1857</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a0f00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+    }
+    canvas {
+      display: block;
+    }
+    #ui-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    #title-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      background: linear-gradient(180deg, rgba(20,10,0,0.95) 0%, rgba(20,10,0,0.0) 100%);
+      padding: 12px 20px;
+      color: #d4a843;
+      font-size: 18px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(212,168,67,0.5);
+      pointer-events: none;
+      text-align: center;
+    }
+    #title-bar span {
+      font-size: 11px;
+      color: #a07830;
+      display: block;
+      letter-spacing: 5px;
+      margin-top: 2px;
+    }
+    #status-bar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(0deg, rgba(20,10,0,0.95) 0%, rgba(20,10,0,0.0) 100%);
+      padding: 10px 20px;
+      color: #c8a060;
+      font-size: 12px;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+    #hex-info {
+      position: absolute;
+      top: 80px; right: 20px;
+      background: rgba(20,10,0,0.85);
+      border: 1px solid #5a3a10;
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: #d4a843;
+      font-size: 12px;
+      min-width: 160px;
+      display: none;
+    }
+    #hex-info h3 {
+      font-size: 14px;
+      color: #f0c060;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #5a3a10;
+      padding-bottom: 4px;
+    }
+    #hex-info p {
+      margin: 3px 0;
+      color: #c8a060;
+    }
+    #hex-info .terrain-label {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    #bonus-bank {
+      position: absolute;
+      top: 80px; left: 20px;
+      background: rgba(20,10,0,0.85);
+      border: 1px solid #5a3a10;
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: #d4a843;
+      font-size: 12px;
+      min-width: 140px;
+    }
+    #bonus-bank h3 {
+      font-size: 13px;
+      color: #f0c060;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #5a3a10;
+      padding-bottom: 4px;
+      letter-spacing: 1px;
+    }
+    .bonus-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 3px 0;
+      font-size: 11px;
+    }
+    .bonus-value {
+      color: #7fc47f;
+      font-weight: bold;
+    }
+    #turn-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20,10,0,0.92);
+      border: 2px solid #d4a843;
+      border-radius: 6px;
+      padding: 20px 40px;
+      color: #d4a843;
+      font-size: 22px;
+      letter-spacing: 3px;
+      text-align: center;
+      display: none;
+      text-transform: uppercase;
+    }
+    #turn-indicator span {
+      display: block;
+      font-size: 13px;
+      color: #a07830;
+      letter-spacing: 2px;
+      margin-top: 6px;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index-DuT4miOC.js"></script>
+</head>
+<body>
+  <div id="game-container">
+    <div id="ui-overlay">
+      <div id="title-bar">
+        La Campaña Nacional
+        <span>Centroamérica · 1856 – 1857</span>
+      </div>
+      <div id="bonus-bank">
+        <h3>⚔ Banco de Bonos</h3>
+        <div class="bonus-item">
+          <span>Combate:</span><span class="bonus-value" id="bonus-combat">+0</span>
+        </div>
+        <div class="bonus-item">
+          <span>Movimiento:</span><span class="bonus-value" id="bonus-move">+0</span>
+        </div>
+        <div class="bonus-item">
+          <span>Estético:</span><span class="bonus-value" id="bonus-estetic">0</span>
+        </div>
+        <div class="bonus-item" style="margin-top:8px; border-top:1px solid #5a3a10; padding-top:6px;">
+          <span>Turno:</span><span id="turn-num" style="color:#f0c060">1</span>
+        </div>
+        <div class="bonus-item">
+          <span>Fase:</span><span id="phase-label" style="color:#f0c060">Movimiento</span>
+        </div>
+        <div class="bonus-item">
+          <span>Mov. restantes:</span><span class="bonus-value" id="moves-left">3</span>
+        </div>
+      </div>
+      <div id="hex-info">
+        <h3 id="hex-name">—</h3>
+        <p id="hex-terrain">Terreno: —</p>
+        <p id="hex-movement">Costo mov.: —</p>
+        <p id="hex-note">—</p>
+      </div>
+      <div id="turn-indicator">
+        Turno Filibustero
+        <span>Walker avanza...</span>
+      </div>
+      <div id="status-bar">
+        <div id="status-left">Haz clic en un hexágono para explorar</div>
+        <div id="status-right">D20 Sistema · Sprint 1</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
