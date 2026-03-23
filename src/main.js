@@ -1,18 +1,19 @@
 import Phaser from 'phaser';
-import { MapScene } from './scenes/MapScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
+import { IntroScene }   from './scenes/IntroScene.js';
+import { GameScene }    from './scenes/GameScene.js';
 
 const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#1a0f00',
+  backgroundColor: '#080400',
   parent: 'game-canvas',
   scale: {
     mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [PreloadScene, MapScene],
+  scene: [PreloadScene, IntroScene, GameScene],
   render: {
     antialias: true,
     pixelArt: false,
