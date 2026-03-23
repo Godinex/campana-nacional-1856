@@ -166,8 +166,12 @@ export class MapScene extends Phaser.Scene {
 
       // Marcador
       if (isBattle) {
-        cityGfx.fillStyle(0xc04040, 0.9);
-        cityGfx.fillStar(p.x, p.y, 4, 4, 8, 0);
+        // Cruz de batalla ✕
+        cityGfx.lineStyle(3, 0xff4040, 0.95);
+        cityGfx.beginPath();
+        cityGfx.moveTo(p.x - 5, p.y - 5); cityGfx.lineTo(p.x + 5, p.y + 5);
+        cityGfx.moveTo(p.x + 5, p.y - 5); cityGfx.lineTo(p.x - 5, p.y + 5);
+        cityGfx.strokePath();
       } else if (isMajor) {
         cityGfx.fillStyle(0xffe070, 0.9);
         cityGfx.fillCircle(p.x, p.y, 5);
