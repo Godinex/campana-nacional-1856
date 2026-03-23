@@ -4,6 +4,7 @@ import { TurnManager, PHASES, PHASE_LABELS } from '../systems/TurnManager.js';
 import { HexPathfinder } from '../systems/HexPathfinder.js';
 import { AIController } from '../systems/AIController.js';
 import { TriviaModal } from '../systems/TriviaModal.js';
+import { COUNTRY_BORDERS, WATER_BODIES, RIVERS, HISTORICAL_CITIES, geoToPixel } from '../data/mapsvg.js';
 
 // ============================================================
 // HEX GEOMETRY
@@ -96,9 +97,104 @@ export class MapScene extends Phaser.Scene {
   // WORLD BUILDING
   // ──────────────────────────────────────────────────────────
   createBackground() {
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x061030, 0x061030, 0x0a2050, 0x0a2050, 1);
-    g.fillRect(0, 0, 1200, 750);
+    const W = this.scale.width  || 1200;
+    const H = this.scale.height || 750;
+    const g = this.add.graphics().setDepth(0);
+    // Fondo océano
+    g.fillGradientStyle(0x061828, 0x061828, 0x0a2840, 0x0a2840, 1);
+    g.fillRect(0, 0, W, H);
+
+    // ── Fronteras de países ──────────────────────────────
+    const geoGfx = this.add.graphics().setDepth(0);
+    for (const country of Object.values(COUNTRY_BORDERS)) {
+      const pts = country.points.map(([lon, lat]) => {
+        const p = geoToPixel(lon, lat, W, H);
+        return new Phaser.Geom.Point(p.x, p.y);
+      });
+      geoGfx.fillStyle(country.color, 0.55);
+      geoGfx.fillPoints(pts, true);
+      geoGfx.lineStyle(1.5, 0x8a7040, 0.7);
+      geoGfx.strokePoints(pts, true);
+
+      // Nombre del país
+      const lp = geoToPixel(country.labelLon, country.labelLat, W, H);
+      this.add.text(lp.x, lp.y, country.name, {
+        fontFamily: 'Georgia', fontSize: '12px',
+        color: '#c8b870', stroke: '#000', strokeThickness: 3,
+        align: 'center',
+      }).setOrigin(0.5).setDepth(2).setAlpha(0.85);
+    }
+
+    // ── Cuerpos de agua ──────────────────────────────────
+    for (const water of WATER_BODIES) {
+      const pts = water.points.map(([lon, lat]) => {
+        const p = geoToPixel(lon, lat, W, H);
+        return new Phaser.Geom.Point(p.x, p.y);
+      });
+      geoGfx.fillStyle(water.color, 0.75);
+      geoGfx.fillPoints(pts, true);
+      geoGfx.lineStyle(1, 0x4090c0, 0.6);
+      geoGfx.strokePoints(pts, true);
+
+      const lp = geoToPixel(water.labelLon, water.labelLat, W, H);
+      this.add.text(lp.x, lp.y, water.name, {
+        fontFamily: 'Georgia', fontSize: '10px',
+        color: '#80c0e8', stroke: '#000000', strokeThickness: 3,
+        fontStyle: 'italic',
+      }).setOrigin(0.5).setDepth(2).setAlpha(0.9);
+    }
+
+    // ── Ríos ─────────────────────────────────────────────
+    for (const river of RIVERS) {
+      geoGfx.lineStyle(2, river.color, 0.65);
+      geoGfx.beginPath();
+      river.points.forEach(([lon, lat], i) => {
+        const p = geoToPixel(lon, lat, W, H);
+        if (i === 0) geoGfx.moveTo(p.x, p.y);
+        else         geoGfx.lineTo(p.x, p.y);
+      });
+      geoGfx.strokePath();
+    }
+
+    // ── Ciudades históricas ──────────────────────────────
+    const cityGfx = this.add.graphics().setDepth(3);
+    for (const city of HISTORICAL_CITIES) {
+      const p = geoToPixel(city.lon, city.lat, W, H);
+      const isBattle = city.type === 'battle';
+      const isMajor  = city.type === 'major';
+      const isPort   = city.type === 'port';
+
+      // Marcador
+      if (isBattle) {
+        cityGfx.fillStyle(0xc04040, 0.9);
+        cityGfx.fillStar(p.x, p.y, 4, 4, 8, 0);
+      } else if (isMajor) {
+        cityGfx.fillStyle(0xffe070, 0.9);
+        cityGfx.fillCircle(p.x, p.y, 5);
+        cityGfx.lineStyle(1, 0x000, 0.8);
+        cityGfx.strokeCircle(p.x, p.y, 5);
+      } else if (isPort) {
+        cityGfx.fillStyle(0x80c8ff, 0.9);
+        cityGfx.fillCircle(p.x, p.y, 4);
+      } else {
+        cityGfx.fillStyle(0xd0b860, 0.7);
+        cityGfx.fillCircle(p.x, p.y, 3);
+      }
+
+      // Etiqueta legible — 12px
+      const label = this.add.text(p.x + 7, p.y - 5, city.name, {
+        fontFamily: 'Georgia',
+        fontSize: '12px',
+        color: isBattle ? '#ff9090' : isMajor ? '#ffe890' : isPort ? '#a0d8ff' : '#d0c080',
+        stroke: '#000000',
+        strokeThickness: 3,
+      }).setDepth(4).setAlpha(0.95);
+
+      // Tooltip al hover
+      if (city.note) {
+        label.setInteractive({ useHandCursor: false });
+      }
+    }
   }
 
   buildHexGrid() {
@@ -133,9 +229,9 @@ export class MapScene extends Phaser.Scene {
       if (locationKey && LOCATIONS[locationKey]) {
         labelObj = this.add.text(x, y + 8, LOCATIONS[locationKey].name, {
           fontFamily: 'Georgia',
-          fontSize: '8px',
+          fontSize: '12px',
           color: terrain === 'city' ? '#ffe8a0' : '#c8d8ff',
-          stroke: '#000', strokeThickness: 2,
+          stroke: '#000', strokeThickness: 3,
           align: 'center',
         }).setOrigin(0.5, 0).setDepth(5);
       }
