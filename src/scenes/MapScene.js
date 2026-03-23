@@ -3,6 +3,7 @@ import { HEX_MAP_DATA, TERRAIN_COLORS, LOCATIONS } from '../../data/hexmap.js';
 import { TurnManager, PHASES, PHASE_LABELS } from '../systems/TurnManager.js';
 import { HexPathfinder } from '../systems/HexPathfinder.js';
 import { AIController } from '../systems/AIController.js';
+import { TriviaModal } from '../systems/TriviaModal.js';
 
 // ============================================================
 // HEX GEOMETRY
@@ -61,6 +62,7 @@ export class MapScene extends Phaser.Scene {
     // Now we can build pathfinder
     this.pathfinder = new HexPathfinder(this.hexData);
     this.ai         = new AIController(this.tm, this.pathfinder);
+    this.trivia     = new TriviaModal();
 
     // Units
     this.spawnInitialUnits();
@@ -374,21 +376,31 @@ export class MapScene extends Phaser.Scene {
   }
 
   // ──────────────────────────────────────────────────────────
-  // TRIVIA PHASE (placeholder para Sprint 3)
+  // TRIVIA PHASE — Sprint 3: modal real con temporizador
   // ──────────────────────────────────────────────────────────
-  startTriviaPhase() {
-    this.showPhasePopup('Pregunta de Batalla', 'Gana bonos para tus tiradas');
+  async startTriviaPhase() {
     this.setPhaseLabel('trivia');
+    this.hidePhasePopup();
+    this.tm.addLog('📚 Pregunta de batalla...');
 
-    // Simular respuesta por ahora — Sprint 3 abrirá el modal real
-    this.time.delayedCall(1800, () => {
-      const bonus = Math.floor(Math.random() * 3) + 1; // +1, +2 o +3
-      this.tm.addBonus('combat', bonus);
-      this.tm.addLog(`📚 Trivia: bono +${bonus} a combate obtenido`);
-      this.hidePhasePopup();
-      this.tm.nextPhase(); // → PLAYER_MOVE
-      this.startPlayerMoveTurn();
-    });
+    // Pequeña pausa antes de mostrar el modal
+    await this.sleep(500);
+
+    const result = await this.trivia.ask(); // muestra modal, espera respuesta
+
+    const { bonusType, bonusAmount, correct, category } = result;
+
+    if (bonusAmount > 0) {
+      this.tm.addBonus(bonusType, bonusAmount);
+      const label = bonusType === 'combat' ? 'combate' : bonusType === 'move' ? 'movimiento' : 'estético';
+      this.tm.addLog(`📚 Trivia (${category}): +${bonusAmount} a ${label}`);
+    } else {
+      this.tm.addLog(`📚 Trivia: sin bono${correct ? '' : ' (respuesta incorrecta)'}`);
+    }
+
+    await this.sleep(300);
+    this.tm.nextPhase(); // → PLAYER_MOVE
+    this.startPlayerMoveTurn();
   }
 
   // ──────────────────────────────────────────────────────────
