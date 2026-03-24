@@ -560,6 +560,21 @@
     #advance-toast .toast-medal { font-size: 52px; line-height: 1; margin-bottom: 8px; }
     #advance-toast .toast-text { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold-lt); letter-spacing: 2px; }
 
+    /* Botón de regreso */
+    #back-btn {
+      display: block; margin: 0 auto;
+      background: none; border: 1px solid var(--border2);
+      border-radius: 8px; color: var(--gold-dk);
+      font-family: 'Cinzel', serif; font-size: 11px;
+      padding: 8px 24px; cursor: pointer;
+      letter-spacing: 3px; text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    #back-btn:hover { border-color: var(--border); color: var(--gold); }
+
+    /* Botones de victoria */
+    .winner-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
     /* Animación fade-in de pantalla */
     .screen-fade { animation: fadein 0.5s ease forwards; }
     @keyframes fadein {
@@ -612,6 +627,7 @@
     <div id="players-panel"></div>
     <div id="turn-banner">Turno de <strong id="turn-player-name">—</strong></div>
     <button id="ask-btn" onclick="doAsk()">⚔ Responder Pregunta</button>
+    <button id="back-btn" onclick="confirmBack()">↩ Volver al Inicio</button>
   </div>
 
   <!-- ══ PANTALLA VICTORIA ════════════════════════════════ -->
@@ -628,7 +644,35 @@
         <tbody id="final-tbody"></tbody>
       </table>
     </div>
-    <button class="replay-btn" onclick="resetGame()">↩ Nueva Partida</button>
+    <div class="winner-btns">
+      <button class="replay-btn" onclick="resetGame()">↩ Nueva Partida</button>
+      <button class="replay-btn" onclick="goHome()" style="background:linear-gradient(135deg,#1e0e00,#2a1500);border-color:var(--border);">🏠 Inicio</button>
+    </div>
+  </div>
+
+  <!-- ══ MODAL CONFIRMACIÓN SALIDA ════════════════════════ -->
+  <div id="confirm-modal" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(5,2,0,0.92);align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+    <div style="background:linear-gradient(135deg,#140800,#1e0e00);border:1px solid var(--gold);border-radius:12px;padding:32px 40px;max-width:360px;width:90%;text-align:center;box-shadow:0 0 60px rgba(212,168,67,0.2);">
+      <div style="font-size:36px;margin-bottom:12px">⚠️</div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:2px;color:var(--gold-lt);margin-bottom:8px">¿Abandonar partida?</div>
+      <div style="font-size:13px;color:var(--gold-dk);font-style:italic;margin-bottom:24px">Se perderá el progreso actual.</div>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="closeConfirm()" style="background:rgba(20,10,0,0.8);border:1px solid var(--border);border-radius:8px;color:var(--gold-dk);font-family:'Cinzel',serif;font-size:12px;padding:10px 24px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">Cancelar</button>
+        <button onclick="doBack()" style="background:linear-gradient(135deg,#3a1a00,#5a2800);border:1px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:12px;padding:10px 24px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(212,168,67,0.3)'" onmouseout="this.style.boxShadow='none'">Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL RECORDS ══════════════════════════════════════ -->
+  <div id="records-modal" style="display:none;position:fixed;inset:0;z-index:2500;background:rgba(5,2,0,0.92);align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+    <div style="background:linear-gradient(135deg,#140800,#1e0e00);border:1px solid var(--gold);border-radius:12px;padding:28px 32px;max-width:560px;width:92%;box-shadow:0 0 60px rgba(212,168,67,0.2);position:relative;max-height:85vh;overflow-y:auto;">
+      <button onclick="closeRecords()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--gold-dk);font-size:22px;cursor:pointer;font-family:'Cinzel',serif;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gold-dk)'">✕</button>
+      <h2 style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:18px;">🏆 Tabla de Records</h2>
+      <div id="records-content"></div>
+      <div style="text-align:center;margin-top:20px;">
+        <button onclick="clearRecords()" style="background:none;border:1px solid #5a2020;border-radius:6px;color:#804040;font-family:'Cinzel',serif;font-size:10px;padding:6px 18px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;" onmouseover="this.style.borderColor='#c04040';this.style.color='#c04040'" onmouseout="this.style.borderColor='#5a2020';this.style.color='#804040'">Borrar Records</button>
+      </div>
+    </div>
   </div>
 
   <!-- ══ MODAL AUTOR ══════════════════════════════════════ -->
@@ -655,7 +699,10 @@
   <!-- ══ FOOTER ═══════════════════════════════════════════ -->
   <div id="footer-bar">
     <span>Campaña Nacional 1856 · Recurso Educativo</span>
-    <button onclick="openAuthor()">ℹ️ Autor y Fuentes</button>
+    <div style="display:flex;gap:16px;">
+      <button onclick="openRecords()">🏆 Records</button>
+      <button onclick="openAuthor()">ℹ️ Autor y Fuentes</button>
+    </div>
   </div>
 
   <!-- Toast de avance -->
@@ -748,6 +795,8 @@
           medals: { gold: 0, silver: 0, bronze: 0 },
           color: PAWN_COLORS[i % PAWN_COLORS.length],
           initial: name.charAt(0).toUpperCase(),
+          totalElapsed: 0,
+          answeredCount: 0,
         });
       }
 
@@ -858,10 +907,16 @@
         player: p.name,
       });
 
+      // Acumular tiempo de respuesta siempre (correcta o no)
+      const elapsed = result.elapsed || 0;
+      if (result.correct || elapsed > 0) {
+        p.totalElapsed += elapsed;
+        p.answeredCount++;
+      }
+
       if (result.correct) {
         // Medalla
         let medal, medalEmoji;
-        const elapsed = result.elapsed || 0;
         if (elapsed < 3000)      { p.medals.gold++;   medal = 'gold';   medalEmoji = '🏅'; }
         else if (elapsed < 8000) { p.medals.silver++; medal = 'silver'; medalEmoji = '🎖'; }
         else                     { p.medals.bronze++; medal = 'bronze'; medalEmoji = '📜'; }
@@ -915,6 +970,9 @@
       // GA: fin de partida
       gtag('event', 'game_end', { winner: winner.name, hero: winner.hero, mode: state.mode });
 
+      // Guardar records de todos los jugadores
+      state.players.forEach(p => saveRecord(p, state.mode, state.turn || 0));
+
       document.getElementById('winner-name').textContent = winner.name;
       document.getElementById('winner-hero').textContent = winner.hero;
 
@@ -940,6 +998,108 @@
       sw.style.display = 'flex';
       sw.classList.add('screen-fade');
     }
+
+    // ── RECORDS (localStorage) ──────────────────────────────
+    const RECORDS_KEY = 'campana_records_v1';
+
+    function loadRecords() {
+      try { return JSON.parse(localStorage.getItem(RECORDS_KEY)) || []; }
+      catch { return []; }
+    }
+
+    function saveRecord(player, mode, totalTurns) {
+      const records = loadRecords();
+      const totalMedals = player.medals.gold + player.medals.silver + player.medals.bronze;
+      const score = player.medals.gold * 3 + player.medals.silver * 2 + player.medals.bronze;
+      const avgMs = player.totalElapsed > 0 && player.answeredCount > 0
+        ? Math.round(player.totalElapsed / player.answeredCount / 100) / 10
+        : null;
+
+      records.push({
+        name:    player.name,
+        hero:    player.hero,
+        mode,
+        pos:     player.pos,
+        gold:    player.medals.gold,
+        silver:  player.medals.silver,
+        bronze:  player.medals.bronze,
+        score,
+        avgSec:  avgMs,
+        date:    new Date().toLocaleDateString('es-CR', { day:'2-digit', month:'2-digit', year:'numeric' }),
+      });
+
+      // Máximo 50 records, ordenados por score desc
+      records.sort((a, b) => b.score - a.score || a.avgSec - b.avgSec);
+      records.splice(50);
+      localStorage.setItem(RECORDS_KEY, JSON.stringify(records));
+    }
+
+    window.openRecords = function() {
+      const records = loadRecords();
+      const el = document.getElementById('records-content');
+      if (records.length === 0) {
+        el.innerHTML = `<div style="text-align:center;color:var(--gold-dk);font-style:italic;padding:20px 0;">Aún no hay partidas registradas.</div>`;
+      } else {
+        el.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead>
+              <tr style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--amber);">
+                <th style="padding:8px 10px;text-align:left;background:rgba(90,58,16,0.3);">#</th>
+                <th style="padding:8px 10px;text-align:left;background:rgba(90,58,16,0.3);">Jugador</th>
+                <th style="padding:8px 10px;text-align:left;background:rgba(90,58,16,0.3);">Héroe</th>
+                <th style="padding:8px 10px;text-align:center;background:rgba(90,58,16,0.3);">Modo</th>
+                <th style="padding:8px 10px;text-align:center;background:rgba(90,58,16,0.3);">Medallas</th>
+                <th style="padding:8px 10px;text-align:center;background:rgba(90,58,16,0.3);">Puntaje</th>
+                <th style="padding:8px 10px;text-align:center;background:rgba(90,58,16,0.3);">Prom.</th>
+                <th style="padding:8px 10px;text-align:left;background:rgba(90,58,16,0.3);">Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${records.map((r, i) => `
+                <tr style="border-top:1px solid rgba(90,58,16,0.25);${i===0?'background:rgba(212,168,67,0.04)':''}">
+                  <td style="padding:8px 10px;color:${i===0?'var(--amber)':'var(--gold-dk)'};font-family:'Cinzel',serif;">${i+1}</td>
+                  <td style="padding:8px 10px;color:var(--gold-lt);font-weight:500;">${r.name}</td>
+                  <td style="padding:8px 10px;color:#a89060;font-style:italic;">${r.hero}</td>
+                  <td style="padding:8px 10px;text-align:center;color:var(--gold-dk);">${r.mode === 'primaria' ? '🏫' : '📚'}</td>
+                  <td style="padding:8px 10px;text-align:center;font-size:14px;">${'🏅'.repeat(r.gold)}${'🎖'.repeat(r.silver)}${'📜'.repeat(r.bronze) || '—'}</td>
+                  <td style="padding:8px 10px;text-align:center;color:var(--amber);font-family:'Cinzel',serif;">${r.score}</td>
+                  <td style="padding:8px 10px;text-align:center;color:#a89060;">${r.avgSec ? r.avgSec + 's' : '—'}</td>
+                  <td style="padding:8px 10px;color:var(--gold-dk);font-size:11px;">${r.date}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>`;
+      }
+      document.getElementById('records-modal').style.display = 'flex';
+    };
+
+    window.closeRecords = () => { document.getElementById('records-modal').style.display = 'none'; };
+    window.clearRecords = function() {
+      if (confirm('¿Borrar todos los records? Esta acción no se puede deshacer.')) {
+        localStorage.removeItem(RECORDS_KEY);
+        openRecords();
+      }
+    };
+
+    // ── REGRESO AL INICIO ───────────────────────────────────
+    window.confirmBack = function() {
+      const m = document.getElementById('confirm-modal');
+      m.style.display = 'flex';
+    };
+    window.closeConfirm = function() {
+      document.getElementById('confirm-modal').style.display = 'none';
+    };
+    window.doBack = function() {
+      document.getElementById('confirm-modal').style.display = 'none';
+      document.getElementById('screen-game').style.display = 'none';
+      document.getElementById('screen-welcome').style.display = 'flex';
+      renderPlayerSetup();
+    };
+    window.goHome = function() {
+      document.getElementById('screen-winner').style.display = 'none';
+      document.getElementById('screen-welcome').style.display = 'flex';
+      renderPlayerSetup();
+    };
 
     // ── RESET ───────────────────────────────────────────────
     window.resetGame = function() {
