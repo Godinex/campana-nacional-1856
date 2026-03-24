@@ -4,177 +4,960 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La Campaña Nacional 1856–1857</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PCYY95Z0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L6PCYY95Z0');
+  </script>
+
   <style>
+    :root {
+      --gold:    #d4a843;
+      --gold-lt: #f0d890;
+      --gold-dk: #906030;
+      --amber:   #f0c060;
+      --bg:      #0e0800;
+      --bg2:     #1a0f00;
+      --bg3:     #2a1500;
+      --border:  #5a3a10;
+      --border2: #3a2000;
+      --green:   #7fc47f;
+      --red:     #c04040;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     html, body {
-      background: #1a0f00;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      font-family: 'Georgia', serif;
+      background: var(--bg);
+      min-height: 100vh;
+      font-family: 'EB Garamond', Georgia, serif;
+      color: var(--gold);
+      overflow-x: hidden;
     }
-    /* Phaser monta su canvas aquí */
-    #game-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+
+    /* ── TEXTURA DE FONDO ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(212,168,67,0.015) 40px, rgba(212,168,67,0.015) 41px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(212,168,67,0.015) 40px, rgba(212,168,67,0.015) 41px);
     }
-    /* Todo el UI flota encima del canvas */
-    #ui-layer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 10;
+
+    /* Separador decorativo */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--gold-dk); font-size: 10px; letter-spacing: 4px;
+      text-transform: uppercase; margin: 20px 0;
     }
-    #title-bar {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      background: linear-gradient(180deg, rgba(20,10,0,0.92) 0%, transparent 100%);
-      padding: 10px 20px 20px;
-      color: #d4a843;
-      font-size: 17px;
-      letter-spacing: 3px;
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* ── PANTALLA DE BIENVENIDA ─────────────────── */
+    #screen-welcome {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 24px 60px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(212,168,67,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at center, #1e1000 0%, var(--bg) 75%);
+    }
+
+    .welcome-crest {
+      font-size: 52px; margin-bottom: 12px;
+      filter: drop-shadow(0 0 20px rgba(212,168,67,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    #screen-welcome h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(24px, 4.5vw, 42px);
+      font-weight: 700;
+      letter-spacing: 6px;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(212,168,67,0.5);
       text-align: center;
+      background: linear-gradient(180deg, #f0d890 0%, #d4a843 50%, #a07030 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 6px;
+      line-height: 1.2;
     }
-    #title-bar span {
+    #screen-welcome .subtitle {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      letter-spacing: 4px;
+      color: var(--gold-dk);
+      margin-bottom: 10px;
+    }
+    #screen-welcome .year-badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 3px 14px;
       font-size: 10px;
-      color: #a07830;
-      display: block;
       letter-spacing: 5px;
-      margin-top: 2px;
+      color: var(--gold-dk);
+      margin-bottom: 36px;
     }
-    #bonus-bank {
-      position: absolute;
-      top: 70px; left: 16px;
-      background: rgba(15,8,0,0.88);
-      border: 1px solid #5a3a10;
-      border-radius: 4px;
-      padding: 8px 12px;
-      color: #d4a843;
-      font-size: 11px;
-      min-width: 150px;
+
+    /* Selector de modo */
+    .mode-selector {
+      display: flex; gap: 16px; margin-bottom: 36px;
+      flex-wrap: wrap; justify-content: center;
     }
-    #bonus-bank h3 {
-      font-size: 12px; color: #f0c060;
-      margin-bottom: 5px;
-      border-bottom: 1px solid #5a3a10;
-      padding-bottom: 3px; letter-spacing: 1px;
-    }
-    .bonus-item {
-      display: flex; justify-content: space-between; margin: 3px 0;
-    }
-    .bonus-value { color: #7fc47f; font-weight: bold; }
-    #hex-info {
-      position: absolute;
-      top: 70px; right: 16px;
-      background: rgba(15,8,0,0.88);
-      border: 1px solid #5a3a10;
-      border-radius: 4px;
-      padding: 8px 12px;
-      color: #d4a843;
-      font-size: 11px;
+    .mode-btn {
+      background: linear-gradient(135deg, #1e0e00, #2a1500);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #c8a060;
+      font-family: 'EB Garamond', serif;
+      font-size: 14px;
+      padding: 20px 36px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      text-align: center;
       min-width: 170px;
-      display: none;
+      position: relative; overflow: hidden;
     }
-    #hex-info h3 { font-size: 13px; color: #f0c060; margin-bottom: 5px; border-bottom: 1px solid #5a3a10; padding-bottom: 3px; }
-    #hex-info p  { margin: 2px 0; color: #c8a060; }
-    #status-bar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(0deg, rgba(15,8,0,0.92) 0%, transparent 100%);
-      padding: 18px 16px 8px;
-      color: #c8a060; font-size: 11px; letter-spacing: 1px;
-      display: flex; justify-content: space-between; align-items: flex-end;
+    .mode-btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(212,168,67,0.0), rgba(212,168,67,0.08));
+      opacity: 0; transition: opacity 0.3s;
     }
-    /* Log y botón tienen pointer-events propios */
-    #log-panel {
-      position: absolute;
-      bottom: 36px; left: 16px;
-      background: rgba(15,8,0,0.85);
-      border: 1px solid #5a3a10; border-radius: 4px;
-      padding: 6px 10px;
-      min-width: 210px; max-width: 270px;
-      max-height: 120px; overflow-y: auto;
-      font-size: 10px; color: #a89060;
-      pointer-events: auto;
+    .mode-btn:hover::after, .mode-btn.selected::after { opacity: 1; }
+    .mode-btn:hover, .mode-btn.selected {
+      border-color: var(--gold);
+      color: var(--gold-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212,168,67,0.15), 0 0 0 1px rgba(212,168,67,0.1);
     }
-    #end-turn-btn {
-      position: absolute;
-      bottom: 36px; right: 16px;
-      background: #3a1a00; border: 1px solid #d4a843; border-radius: 4px;
-      color: #d4a843; font-family: Georgia, serif; font-size: 11px;
-      padding: 7px 14px; cursor: pointer; letter-spacing: 1px;
-      pointer-events: auto;
-      transition: background 0.2s;
+    .mode-btn .mode-icon { font-size: 32px; display: block; margin-bottom: 10px; }
+    .mode-btn .mode-label { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; letter-spacing: 2px; }
+    .mode-btn .mode-desc { font-size: 11px; color: var(--gold-dk); margin-top: 6px; letter-spacing: 1px; font-style: italic; }
+
+    /* Registro de jugadores */
+    #players-setup { width: 100%; max-width: 580px; }
+    #players-setup h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 11px; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold-dk);
+      margin-bottom: 16px; text-align: center;
     }
-    #end-turn-btn:hover { background: #5a2a00; }
-    #turn-indicator {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(15,8,0,0.93);
-      border: 2px solid #d4a843; border-radius: 6px;
-      padding: 18px 36px;
-      color: #d4a843; font-size: 20px;
-      letter-spacing: 3px; text-align: center;
-      text-transform: uppercase; display: none;
+    .player-count-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; margin-bottom: 20px;
     }
-    #turn-indicator span {
-      display: block; font-size: 12px;
-      color: #a07830; letter-spacing: 2px; margin-top: 5px;
+    .count-btn {
+      background: linear-gradient(135deg, #1e0e00, #2a1500);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 20px; width: 40px; height: 40px;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .count-btn:hover { border-color: var(--gold); box-shadow: 0 0 12px rgba(212,168,67,0.2); transform: scale(1.1); }
+    #player-count-display {
+      font-family: 'Cinzel', serif;
+      font-size: 28px; color: var(--amber);
+      min-width: 40px; text-align: center;
+    }
+    #players-list {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 24px; max-height: 320px; overflow-y: auto;
+    }
+    #players-list::-webkit-scrollbar { width: 4px; }
+    #players-list::-webkit-scrollbar-track { background: #1a0a00; }
+    #players-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .player-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      background: rgba(15,8,0,0.7);
+      border: 1px solid var(--border2);
+      border-radius: 8px; padding: 12px 14px;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+    .player-row:hover { border-color: var(--border); }
+    .player-row .player-num {
+      grid-column: 1/-1; font-size: 9px;
+      letter-spacing: 3px; color: var(--gold-dk);
+      text-transform: uppercase; margin-bottom: 4px;
+      font-family: 'Cinzel', serif;
+    }
+    .player-row input, .player-row select {
+      background: rgba(10,5,0,0.8);
+      border: 1px solid var(--border);
+      border-radius: 5px; color: var(--gold-lt);
+      font-family: 'EB Garamond', serif; font-size: 14px;
+      padding: 8px 12px; width: 100%; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .player-row input:focus, .player-row select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(212,168,67,0.1);
+    }
+    .player-row select option { background: #1a0a00; }
+
+    .start-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #3a1a00, #5a2800);
+      border: 1px solid var(--gold);
+      border-radius: 8px; color: var(--gold);
+      font-family: 'Cinzel', serif; font-size: 14px;
+      padding: 16px; cursor: pointer;
+      letter-spacing: 4px; text-transform: uppercase;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.1);
+    }
+    .start-btn:hover {
+      background: linear-gradient(135deg, #5a2800, #7a3800);
+      box-shadow: 0 6px 30px rgba(212,168,67,0.25);
+      transform: translateY(-1px);
+    }
+    .start-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── PANTALLA DE JUEGO ──────────────────────── */
+    #screen-game {
+      display: none; min-height: 100vh;
+      flex-direction: column; padding: 12px 16px 60px;
+      position: relative; z-index: 1;
+    }
+
+    #game-header {
+      text-align: center; margin-bottom: 14px;
+      padding: 10px 0 8px;
+      border-bottom: 1px solid rgba(90,58,16,0.4);
+    }
+    #game-header h1 {
+      font-family: 'Cinzel', serif; font-size: 16px;
+      letter-spacing: 5px; text-transform: uppercase;
+      background: linear-gradient(180deg, var(--gold-lt), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    #game-header .sub { font-size: 10px; color: var(--gold-dk); letter-spacing: 4px; font-style: italic; }
+
+    /* Tablero */
+    #board-wrap {
+      overflow-x: auto; margin-bottom: 16px;
+      padding: 6px 0 12px;
+    }
+    #board-wrap::-webkit-scrollbar { height: 4px; }
+    #board-wrap::-webkit-scrollbar-track { background: #1a0a00; }
+    #board-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    #board {
+      display: flex; align-items: flex-end; gap: 3px;
+      min-width: max-content; padding: 4px 8px;
+    }
+
+    /* Conector entre casillas */
+    .cell-connector {
+      width: 12px; height: 3px;
+      background: linear-gradient(90deg, var(--border2), var(--border));
+      border-radius: 2px; margin-bottom: 20px; flex-shrink: 0;
+      align-self: center;
+    }
+
+    .cell { display: flex; flex-direction: column; align-items: center; min-width: 76px; }
+    .cell-pawns {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 3px; min-height: 36px; margin-bottom: 5px;
+    }
+    .pawn {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+      color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .pawn::after {
+      content: ''; position: absolute; top: 3px; left: 5px;
+      width: 8px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+    .pawn.moving { transform: scale(1.3) translateY(-4px); }
+
+    .cell-box {
+      width: 74px; border: 1px solid var(--border);
+      border-radius: 8px; background: rgba(12,6,0,0.85);
+      padding: 7px 5px; text-align: center;
+      transition: box-shadow 0.3s; position: relative;
+    }
+    .cell-box.start-cell {
+      border-color: var(--green);
+      background: rgba(10,30,10,0.6);
+      box-shadow: 0 0 8px rgba(127,196,127,0.15);
+    }
+    .cell-box.end-cell {
+      border-color: var(--gold);
+      background: rgba(30,15,0,0.9);
+      box-shadow: 0 0 16px rgba(212,168,67,0.3);
+    }
+    .cell-box.end-cell::before {
+      content: '';  position: absolute; inset: -2px;
+      border-radius: 10px; border: 1px solid rgba(212,168,67,0.2);
+      pointer-events: none;
+    }
+    .cell-num { font-size: 8px; color: var(--border); margin-bottom: 3px; font-family: 'Cinzel', serif; }
+    .cell-name { font-size: 9px; color: #c8a060; line-height: 1.3; font-style: italic; }
+    .cell-box.start-cell .cell-name { color: var(--green); font-style: normal; }
+    .cell-box.end-cell   .cell-name { color: var(--amber); font-weight: bold; font-style: normal; }
+
+    /* Tarjetas de jugadores */
+    #players-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px; margin-bottom: 16px;
+    }
+    .player-card {
+      background: linear-gradient(135deg, rgba(12,6,0,0.9), rgba(20,10,0,0.9));
+      border: 1px solid var(--border2);
+      border-radius: 10px; padding: 12px 14px;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .player-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      transition: background 0.3s;
+    }
+    .player-card.active {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(212,168,67,0.2), inset 0 0 20px rgba(212,168,67,0.03);
+    }
+    .player-card.active::before {
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .pc-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+      color: #fff; margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .player-card .pc-name {
+      font-family: 'Cinzel', serif;
+      font-size: 12px; color: var(--gold-lt); font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .player-card .pc-hero {
+      font-size: 11px; color: var(--gold-dk); font-style: italic;
+      margin-bottom: 8px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .pc-progress {
+      height: 3px; border-radius: 2px;
+      background: var(--border2); margin-bottom: 8px; overflow: hidden;
+    }
+    .pc-progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold-dk), var(--gold));
+      transition: width 0.5s ease;
+    }
+    .player-card .pc-pos {
+      font-size: 9px; color: #a89060; margin-bottom: 6px;
+      font-family: 'Cinzel', serif; letter-spacing: 1px;
+    }
+    .player-card .pc-medals { font-size: 15px; letter-spacing: 3px; min-height: 20px; }
+
+    /* Banner de turno */
+    #turn-banner {
+      background: linear-gradient(135deg, rgba(12,6,0,0.95), rgba(25,12,0,0.95));
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 20px;
+      text-align: center; margin-bottom: 14px;
+      font-size: 14px; color: #c8a060; letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      font-style: italic;
+    }
+    #turn-banner strong {
+      font-family: 'Cinzel', serif; font-style: normal;
+      color: var(--gold-lt); font-size: 15px;
+    }
+
+    #ask-btn {
+      display: block; margin: 0 auto 16px;
+      background: linear-gradient(135deg, #3a1a00, #5a2800);
+      border: 1px solid var(--gold);
+      border-radius: 10px; color: var(--gold);
+      font-family: 'Cinzel', serif; font-size: 13px;
+      padding: 14px 48px; cursor: pointer;
+      letter-spacing: 4px; text-transform: uppercase;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.15);
+    }
+    #ask-btn:hover {
+      background: linear-gradient(135deg, #5a2800, #7a3800);
+      box-shadow: 0 6px 30px rgba(212,168,67,0.3);
+      transform: translateY(-2px);
+    }
+    #ask-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── PANTALLA DE VICTORIA ───────────────────── */
+    #screen-winner {
+      display: none; min-height: 100vh;
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 24px 60px; text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(212,168,67,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at center, #1e1000 0%, var(--bg) 75%);
+      position: relative; z-index: 1;
+    }
+    .winner-trophy {
+      font-size: 72px; margin-bottom: 16px;
+      filter: drop-shadow(0 0 30px rgba(212,168,67,0.6));
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(212,168,67,0.4)); transform: scale(1); }
+      50%       { filter: drop-shadow(0 0 40px rgba(212,168,67,0.8)); transform: scale(1.05); }
+    }
+    #screen-winner h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 4.5vw, 36px);
+      letter-spacing: 6px; text-transform: uppercase;
+      background: linear-gradient(180deg, #f0d890, #d4a843, #a07030);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 8px;
+    }
+    #winner-name {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 4.5vw, 38px); font-weight: 700;
+      color: var(--amber); margin: 12px 0 4px;
+      text-shadow: 0 0 40px rgba(240,192,96,0.4);
+    }
+    #winner-hero {
+      font-size: 15px; color: var(--gold-dk);
+      letter-spacing: 2px; margin-bottom: 32px; font-style: italic;
+    }
+    #final-table {
+      width: 100%; max-width: 520px;
+      background: rgba(12,6,0,0.92);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    #final-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    #final-table th {
+      background: rgba(90,58,16,0.3);
+      color: var(--amber);
+      padding: 12px 16px; text-align: left;
+      font-family: 'Cinzel', serif; font-size: 9px;
+      letter-spacing: 3px; text-transform: uppercase;
+    }
+    #final-table td {
+      padding: 10px 16px; color: #c8a060;
+      border-top: 1px solid rgba(90,58,16,0.25);
+    }
+    #final-table tr:first-child td { color: var(--gold-lt); font-weight: 500; background: rgba(212,168,67,0.04); }
+    .replay-btn {
+      background: linear-gradient(135deg, #3a1a00, #5a2800);
+      border: 1px solid var(--gold); border-radius: 10px;
+      color: var(--gold); font-family: 'Cinzel', serif; font-size: 13px;
+      padding: 14px 48px; cursor: pointer;
+      letter-spacing: 4px; text-transform: uppercase;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.15);
+    }
+    .replay-btn:hover {
+      background: linear-gradient(135deg, #5a2800, #7a3800);
+      box-shadow: 0 6px 30px rgba(212,168,67,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ── MODAL AUTOR ────────────────────────────── */
+    #author-modal {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(5,2,0,0.92);
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    #author-modal.open { display: flex; }
+    #author-box {
+      background: linear-gradient(135deg, #140800, #1e0e00);
+      border: 1px solid var(--gold);
+      border-radius: 12px; padding: 32px 36px;
+      max-width: 540px; width: 92%;
+      box-shadow: 0 0 60px rgba(212,168,67,0.2);
+      position: relative; max-height: 88vh; overflow-y: auto;
+    }
+    #author-box::-webkit-scrollbar { width: 4px; }
+    #author-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    #author-box h2 {
+      font-family: 'Cinzel', serif; font-size: 11px;
+      letter-spacing: 4px; text-transform: uppercase; color: var(--amber);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px; margin-bottom: 18px;
+    }
+    #author-box .aname { font-family: 'Cinzel', serif; font-size: 19px; color: var(--gold-lt); margin-bottom: 6px; }
+    #author-box .adesc { font-size: 13px; color: #a89060; line-height: 1.7; margin-bottom: 22px; font-style: italic; }
+    #author-box h3 { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dk); margin-bottom: 12px; }
+    #author-box ul { list-style: none; }
+    #author-box ul li { font-size: 12px; color: #c8a060; line-height: 1.6; padding: 7px 0; border-bottom: 1px solid rgba(90,58,16,0.3); }
+    #author-box ul li:last-child { border-bottom: none; }
+    #author-box ul li em { color: var(--gold-dk); }
+    #author-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; color: var(--gold-dk);
+      font-size: 22px; cursor: pointer; font-family: 'Cinzel', serif;
+      transition: color 0.2s; line-height: 1;
+    }
+    #author-close:hover { color: var(--gold); }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    #footer-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(10,5,0,0.95);
+      border-top: 1px solid var(--border2);
+      padding: 8px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10px; color: var(--border); letter-spacing: 1px;
+      z-index: 100; backdrop-filter: blur(4px);
+      font-family: 'Cinzel', serif;
+    }
+    #footer-bar button {
+      background: none; border: none; color: var(--border);
+      font-family: 'Cinzel', serif; font-size: 10px;
+      cursor: pointer; letter-spacing: 1px; transition: color 0.2s;
+    }
+    #footer-bar button:hover { color: var(--gold); }
+
+    /* ── TOAST ──────────────────────────────────── */
+    #advance-toast {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0) rotate(-3deg);
+      background: linear-gradient(135deg, rgba(12,6,0,0.98), rgba(25,12,0,0.98));
+      border: 1px solid var(--gold);
+      border-radius: 16px; padding: 28px 48px;
+      text-align: center; z-index: 1500;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.7), 0 0 40px rgba(212,168,67,0.15);
+    }
+    #advance-toast.show { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    #advance-toast .toast-medal { font-size: 52px; line-height: 1; margin-bottom: 8px; }
+    #advance-toast .toast-text { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold-lt); letter-spacing: 2px; }
+
+    /* Animación fade-in de pantalla */
+    .screen-fade { animation: fadein 0.5s ease forwards; }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <!-- Phaser canvas goes here -->
-  <div id="game-canvas"></div>
 
-  <!-- UI layer on top -->
-  <div id="ui-layer">
-    <div id="title-bar">
-      La Campaña Nacional
-      <span>Centroamérica · 1856 – 1857</span>
+  <!-- ══ PANTALLA BIENVENIDA ══════════════════════════════ -->
+  <div id="screen-welcome">
+    <div class="welcome-crest">⚔️</div>
+    <h1>La Campaña Nacional</h1>
+    <div class="subtitle">Centroamérica · 1856 – 1857</div>
+    <div class="year-badge">RECURSO EDUCATIVO</div>
+
+    <div class="mode-selector">
+      <button class="mode-btn selected" data-mode="primaria" onclick="selectMode('primaria')">
+        <span class="mode-icon">🏫</span>
+        <span class="mode-label">Primaria</span>
+        <span class="mode-desc">8 casillas · 4to – 6to grado</span>
+      </button>
+      <button class="mode-btn" data-mode="secundaria" onclick="selectMode('secundaria')">
+        <span class="mode-icon">📚</span>
+        <span class="mode-label">Secundaria</span>
+        <span class="mode-desc">12 casillas · 7mo – 9no grado</span>
+      </button>
     </div>
 
-    <div id="bonus-bank">
-      <h3>⚔ Banco de Bonos</h3>
-      <div class="bonus-item"><span>Combate:</span><span class="bonus-value" id="bonus-combat">+0</span></div>
-      <div class="bonus-item"><span>Movimiento:</span><span class="bonus-value" id="bonus-move">+0</span></div>
-      <div class="bonus-item"><span>Estético:</span><span class="bonus-value" id="bonus-estetic">0</span></div>
-      <div class="bonus-item" style="margin-top:6px;border-top:1px solid #5a3a10;padding-top:5px;">
-        <span>Turno:</span><span id="turn-num" style="color:#f0c060">1</span>
+    <div id="players-setup">
+      <div class="divider">Registro de Jugadores</div>
+      <div class="player-count-row">
+        <button class="count-btn" onclick="changeCount(-1)">−</button>
+        <div id="player-count-display">2</div>
+        <button class="count-btn" onclick="changeCount(1)">+</button>
       </div>
-      <div class="bonus-item">
-        <span>Fase:</span><span id="phase-label" style="color:#f0c060">—</span>
-      </div>
-      <div class="bonus-item">
-        <span>Mov. restantes:</span><span class="bonus-value" id="moves-left">3</span>
-      </div>
-    </div>
-
-    <div id="hex-info">
-      <h3 id="hex-name">—</h3>
-      <p id="hex-terrain">Terreno: —</p>
-      <p id="hex-movement">Costo mov.: —</p>
-      <p id="hex-note" style="font-style:italic;margin-top:4px;font-size:10px;color:#906840"></p>
-    </div>
-
-    <div id="turn-indicator">
-      Turno Filibustero
-      <span>Walker avanza...</span>
-    </div>
-
-    <div id="log-panel"></div>
-    <button id="end-turn-btn">Terminar Movimiento</button>
-
-    <div id="status-bar">
-      <div id="status-left">Haz clic en una unidad aliada para moverla</div>
-      <div id="status-right">Campaña Nacional 1856 · D20</div>
+      <div id="players-list"></div>
+      <button class="start-btn" id="start-btn" onclick="startGame()">⚔ Comenzar Partida</button>
     </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <!-- ══ PANTALLA JUEGO ═══════════════════════════════════ -->
+  <div id="screen-game" style="display:none;">
+    <div id="game-header">
+      <h1>La Campaña Nacional</h1>
+      <div class="sub">Centroamérica · 1856 – 1857</div>
+    </div>
+    <div id="board-wrap"><div id="board"></div></div>
+    <div id="players-panel"></div>
+    <div id="turn-banner">Turno de <strong id="turn-player-name">—</strong></div>
+    <button id="ask-btn" onclick="doAsk()">⚔ Responder Pregunta</button>
+  </div>
+
+  <!-- ══ PANTALLA VICTORIA ════════════════════════════════ -->
+  <div id="screen-winner" style="display:none;">
+    <div class="winner-trophy">🏆</div>
+    <h1>¡Victoria!</h1>
+    <div id="winner-name">—</div>
+    <div id="winner-hero">—</div>
+    <div id="final-table">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Jugador</th><th>Héroe</th><th>Pos.</th><th>Medallas</th></tr>
+        </thead>
+        <tbody id="final-tbody"></tbody>
+      </table>
+    </div>
+    <button class="replay-btn" onclick="resetGame()">↩ Nueva Partida</button>
+  </div>
+
+  <!-- ══ MODAL AUTOR ══════════════════════════════════════ -->
+  <div id="author-modal">
+    <div id="author-box">
+      <button id="author-close" onclick="closeAuthor()">✕</button>
+      <h2>📜 Ficha del Autor</h2>
+      <div class="aname">Gustavo Godínez Vargas</div>
+      <div class="adesc">Educador costarricense, historiador aficionado y creador de recursos educativos digitales sobre la historia de Centroamérica.</div>
+      <h3>📚 Fuentes Citadas</h3>
+      <ul>
+        <li><strong>MEP Costa Rica</strong> — <em>Programa de Estudios Sociales, 7mo grado, Unidad 3.</em> Ministerio de Educación Pública.</li>
+        <li><strong>MINED Nicaragua</strong> — <em>Programa de Historia de Nicaragua, 6to grado.</em></li>
+        <li><strong>SEP Honduras</strong> — <em>Programa de Ciencias Sociales, Educación Básica.</em></li>
+        <li><strong>MINED El Salvador</strong> — <em>Historia de El Salvador, Educación Básica.</em></li>
+        <li><strong>MINEDUC Guatemala</strong> — <em>Ciencias Sociales y Formación Ciudadana.</em></li>
+        <li>Acuña Ortega, Víctor Hugo. <em>La guerra de 1856-1857 en Centroamérica.</em> San José: EUNED, 2002.</li>
+        <li>Quesada Camacho, Juan Rafael. <em>Costa Rica: ¿una nación en busca de sí misma?</em> San José: EUNED, 1999.</li>
+        <li>Molina Jiménez, Iván & Palmer, Steven. <em>Historia de Costa Rica.</em> San José: UCR, 2005.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ═══════════════════════════════════════════ -->
+  <div id="footer-bar">
+    <span>Campaña Nacional 1856 · Recurso Educativo</span>
+    <button onclick="openAuthor()">ℹ️ Autor y Fuentes</button>
+  </div>
+
+  <!-- Toast de avance -->
+  <div id="advance-toast">
+    <div class="toast-medal" id="toast-medal">🏅</div>
+    <div class="toast-text" id="toast-text">¡Avanzas!</div>
+  </div>
+
+  <script type="module">
+    import { TriviaModal } from '/src/systems/TriviaModal.js';
+
+    // ── CONSTANTES ──────────────────────────────────────────
+    const HEROES = [
+      'Juan Santamaría', 'Juan Rafael Mora Porras', 'Florencio Xatruch',
+      'Ramón Belloso', 'José Joaquín Mora', 'Máximo Blanco',
+      'Santos Guardiola', 'Gerardo Barrios', 'Lorenzo Salazar', 'Manuel Quirós'
+    ];
+
+    const PAWN_COLORS = [
+      '#e05050','#5080e0','#50b050','#d4a843',
+      '#9050c0','#e09030','#50c0c0','#c05090',
+      '#70b070','#a07040'
+    ];
+
+    const STOPS_PRIMARIA = [
+      'Salida','Hda. Santa Rosa','Liberia','Guanacaste',
+      'Rivas','Lago Nicaragua','Granada','¡Victoria!'
+    ];
+
+    const STOPS_SECUNDARIA = [
+      'Salida','Hda. Santa Rosa','Liberia','Guanacaste',
+      'Puntarenas','Rivas','Mesón de Guerra',
+      'Lago Nicaragua','Río San Juan','Castillo Viejo',
+      'Granada','¡Victoria!'
+    ];
+
+    // ── ESTADO ──────────────────────────────────────────────
+    let state = {
+      mode: 'primaria',
+      playerCount: 2,
+      players: [],
+      currentTurn: 0,
+      stops: [],
+      trivia: null,
+      gameOver: false,
+    };
+
+    window.state = state; // para acceso desde onclick
+
+    // ── PANTALLA BIENVENIDA ─────────────────────────────────
+    window.selectMode = function(mode) {
+      state.mode = mode;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+    };
+
+    window.changeCount = function(delta) {
+      state.playerCount = Math.min(10, Math.max(2, state.playerCount + delta));
+      document.getElementById('player-count-display').textContent = state.playerCount;
+      renderPlayerSetup();
+    };
+
+    function renderPlayerSetup() {
+      const list = document.getElementById('players-list');
+      list.innerHTML = '';
+      for (let i = 0; i < state.playerCount; i++) {
+        const row = document.createElement('div');
+        row.className = 'player-row';
+        row.innerHTML = `
+          <div class="player-num">Jugador ${i + 1}</div>
+          <input type="text" id="pname-${i}" placeholder="Tu nombre" maxlength="20" value="${state.players[i]?.name || ''}">
+          <select id="phero-${i}">
+            ${HEROES.map((h, hi) => `<option value="${h}" ${(state.players[i]?.hero === h || (!state.players[i] && hi === i % HEROES.length)) ? 'selected' : ''}>${h}</option>`).join('')}
+          </select>
+        `;
+        list.appendChild(row);
+      }
+    }
+
+    // ── INICIAR JUEGO ───────────────────────────────────────
+    window.startGame = function() {
+      // Leer jugadores
+      state.players = [];
+      for (let i = 0; i < state.playerCount; i++) {
+        const name = document.getElementById(`pname-${i}`).value.trim() || `Jugador ${i+1}`;
+        const hero = document.getElementById(`phero-${i}`).value;
+        state.players.push({
+          name, hero,
+          pos: 0,
+          medals: { gold: 0, silver: 0, bronze: 0 },
+          color: PAWN_COLORS[i % PAWN_COLORS.length],
+          initial: name.charAt(0).toUpperCase(),
+        });
+      }
+
+      state.stops = state.mode === 'primaria' ? STOPS_PRIMARIA : STOPS_SECUNDARIA;
+      state.currentTurn = 0;
+      state.gameOver = false;
+      state.trivia = new TriviaModal();
+
+      // GA: partida iniciada
+      gtag('event', 'game_start', { mode: state.mode, players: state.playerCount });
+
+      document.getElementById('screen-welcome').style.display = 'none';
+      const sg = document.getElementById('screen-game');
+      sg.style.display = 'flex';
+      sg.style.flexDirection = 'column';
+      sg.classList.add('screen-fade');
+
+      renderBoard();
+      renderPlayersPanel();
+      updateTurnBanner();
+    };
+
+    // ── TABLERO ─────────────────────────────────────────────
+    function renderBoard() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      state.stops.forEach((name, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = `cell-${i}`;
+
+        const pawns = document.createElement('div');
+        pawns.className = 'cell-pawns';
+        state.players.forEach((p, pi) => {
+          if (p.pos === i) {
+            const pawn = document.createElement('div');
+            pawn.className = 'pawn';
+            pawn.id = `pawn-${pi}`;
+            pawn.style.background = p.color;
+            pawn.title = `${p.name} · ${p.hero}`;
+            pawn.textContent = p.initial;
+            pawns.appendChild(pawn);
+          }
+        });
+
+        const box = document.createElement('div');
+        box.className = 'cell-box' + (i === 0 ? ' start-cell' : i === state.stops.length - 1 ? ' end-cell' : '');
+        box.innerHTML = `<div class="cell-num">${i === 0 ? '🚩' : i === state.stops.length - 1 ? '🏆' : i}</div>
+                         <div class="cell-name">${name}</div>`;
+
+        cell.appendChild(pawns);
+        cell.appendChild(box);
+        board.appendChild(cell);
+
+        // Conector entre casillas (no después de la última)
+        if (i < state.stops.length - 1) {
+          const conn = document.createElement('div');
+          conn.className = 'cell-connector';
+          board.appendChild(conn);
+        }
+      });
+    }
+
+    // ── PANEL JUGADORES ─────────────────────────────────────
+    function renderPlayersPanel() {
+      const panel = document.getElementById('players-panel');
+      panel.innerHTML = '';
+      const maxPos = state.stops.length - 1;
+      state.players.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = 'player-card' + (i === state.currentTurn ? ' active' : '');
+        card.id = `pcard-${i}`;
+        const pct = Math.round((p.pos / maxPos) * 100);
+        const totalMedals = p.medals.gold + p.medals.silver + p.medals.bronze;
+        card.innerHTML = `
+          <div class="pc-avatar" style="background:${p.color}">${p.initial}</div>
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-hero">${p.hero}</div>
+          <div class="pc-progress"><div class="pc-progress-fill" style="width:${pct}%"></div></div>
+          <div class="pc-pos">${p.pos} / ${maxPos} casillas</div>
+          <div class="pc-medals">
+            ${'🏅'.repeat(p.medals.gold)}${'🎖'.repeat(p.medals.silver)}${'📜'.repeat(p.medals.bronze)}
+            ${totalMedals === 0 ? '<span style="color:#5a3a10;font-size:12px">sin medallas</span>' : ''}
+          </div>
+        `;
+        panel.appendChild(card);
+      });
+    }
+
+    function updateTurnBanner() {
+      const p = state.players[state.currentTurn];
+      document.getElementById('turn-player-name').textContent = `${p.name} (${p.hero})`;
+    }
+
+    // ── PREGUNTAR ───────────────────────────────────────────
+    window.doAsk = async function() {
+      const btn = document.getElementById('ask-btn');
+      btn.disabled = true;
+
+      const result = await state.trivia.ask();
+      const p = state.players[state.currentTurn];
+
+      // GA: pregunta respondida
+      gtag('event', 'question_answered', {
+        correct: result.correct,
+        category: result.category,
+        mode: state.mode,
+        player: p.name,
+      });
+
+      if (result.correct) {
+        // Medalla
+        let medal, medalEmoji;
+        const elapsed = result.elapsed || 0;
+        if (elapsed < 3000)      { p.medals.gold++;   medal = 'gold';   medalEmoji = '🏅'; }
+        else if (elapsed < 8000) { p.medals.silver++; medal = 'silver'; medalEmoji = '🎖'; }
+        else                     { p.medals.bronze++; medal = 'bronze'; medalEmoji = '📜'; }
+
+        // Avanzar
+        const maxPos = state.stops.length - 1;
+        p.pos = Math.min(p.pos + 1, maxPos);
+
+        // Animación del peón
+        const pawnEl = document.getElementById(`pawn-${state.currentTurn}`);
+        if (pawnEl) { pawnEl.classList.add('moving'); setTimeout(() => pawnEl.classList.remove('moving'), 500); }
+
+        // Toast
+        showToast(medalEmoji, `+1 casilla → ${state.stops[p.pos]}`);
+
+        // GA: medalla
+        gtag('event', 'medal_earned', { medal, player: p.name, mode: state.mode });
+
+        // ¿Ganó?
+        if (p.pos >= maxPos) {
+          setTimeout(() => showWinner(), 1200);
+          return;
+        }
+      }
+
+      renderBoard();
+      renderPlayersPanel();
+
+      // Siguiente turno
+      state.currentTurn = (state.currentTurn + 1) % state.players.length;
+      updateTurnBanner();
+      btn.disabled = false;
+    };
+
+    // ── TOAST ───────────────────────────────────────────────
+    function showToast(medal, text) {
+      const toast = document.getElementById('advance-toast');
+      document.getElementById('toast-medal').textContent = medal;
+      document.getElementById('toast-text').textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+
+    // ── VICTORIA ────────────────────────────────────────────
+    function showWinner() {
+      renderBoard();
+      renderPlayersPanel();
+
+      const winner = state.players[state.currentTurn];
+
+      // GA: fin de partida
+      gtag('event', 'game_end', { winner: winner.name, hero: winner.hero, mode: state.mode });
+
+      document.getElementById('winner-name').textContent = winner.name;
+      document.getElementById('winner-hero').textContent = winner.hero;
+
+      // Tabla final ordenada por posición desc, luego medallas
+      const sorted = [...state.players].sort((a, b) => {
+        if (b.pos !== a.pos) return b.pos - a.pos;
+        const ma = a.medals.gold * 3 + a.medals.silver * 2 + a.medals.bronze;
+        const mb = b.medals.gold * 3 + b.medals.silver * 2 + b.medals.bronze;
+        return mb - ma;
+      });
+
+      const tbody = document.getElementById('final-tbody');
+      tbody.innerHTML = '';
+      sorted.forEach((p, i) => {
+        const tr = document.createElement('tr');
+        const medals = '🏅'.repeat(p.medals.gold) + '🎖'.repeat(p.medals.silver) + '📜'.repeat(p.medals.bronze) || '—';
+        tr.innerHTML = `<td>${i + 1}</td><td style="color:${p.color}">${p.name}</td><td>${p.hero}</td><td>${p.pos}</td><td>${medals}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('screen-game').style.display = 'none';
+      const sw = document.getElementById('screen-winner');
+      sw.style.display = 'flex';
+      sw.classList.add('screen-fade');
+    }
+
+    // ── RESET ───────────────────────────────────────────────
+    window.resetGame = function() {
+      document.getElementById('screen-winner').style.display = 'none';
+      document.getElementById('screen-welcome').style.display = 'flex';
+      renderPlayerSetup();
+    };
+
+    // ── AUTOR ───────────────────────────────────────────────
+    window.openAuthor  = () => document.getElementById('author-modal').classList.add('open');
+    window.closeAuthor = () => document.getElementById('author-modal').classList.remove('open');
+    document.getElementById('author-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('author-modal')) closeAuthor();
+    });
+
+    // ── INIT ────────────────────────────────────────────────
+    renderPlayerSetup();
+  </script>
+
 </body>
 </html>

@@ -1,12 +1,18 @@
 // ============================================================
 // TRIVIA MODAL — Pregunta histórica con temporizador
-// Bonos: +3 (<5s), +2 (5-15s), +1 (>15s), 0 (incorrecta)
+// Flujo: pregunta sola (2s) → opciones + timer 12s
+// Bonos: +3 (<3s), +2 (3-8s), +1 (>8s), 0 (incorrecta)
+// Medallas: 🏅 oro (<3s), 🎖 plata (3-8s), 📜 bronce (>8s)
 // ============================================================
 import { getRandomQuestion, CATEGORY_BONUS_TYPE } from '../data/trivia.js';
 
-const FAST_THRESHOLD   = 5000;   // ms
-const MEDIUM_THRESHOLD = 15000;  // ms
-const TOTAL_TIME       = 20000;  // ms para responder
+const FAST_THRESHOLD   = 3000;   // ms
+const MEDIUM_THRESHOLD = 8000;   // ms
+const TOTAL_TIME       = 12000;  // ms para responder
+const READ_TIME        = 2000;   // ms mostrando solo la pregunta
+
+// Historial de medallas acumulado durante la sesión
+export const medalHistory = [];
 
 export class TriviaModal {
   constructor() {
@@ -21,12 +27,12 @@ export class TriviaModal {
     return new Promise(resolve => {
       this._resolve = resolve;
       const q = getRandomQuestion(categoryHint);
-      this._render(q);
+      this._renderQuestion(q);
     });
   }
 
-  _render(q) {
-    // Limpiar si hay uno activo
+  // ── FASE 1: Solo la pregunta, cuenta regresiva 3s ──────────
+  _renderQuestion(q) {
     this._cleanup();
 
     const overlay = document.createElement('div');
@@ -49,32 +55,65 @@ export class TriviaModal {
       box-shadow:0 0 40px rgba(212,168,67,0.25);
     `;
 
-    // Header
+    // Header: categoría y tipo de bono
     const header = document.createElement('div');
     header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;';
 
     const catLabel = document.createElement('span');
     catLabel.style.cssText = 'font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#906030;';
-    catLabel.textContent = `📜 ${q.category.toUpperCase()} · Dificultad ${'★'.repeat(q.difficulty)}${'☆'.repeat(3-q.difficulty)}`;
+    catLabel.textContent = `📜 ${q.category.toUpperCase()} · Dificultad ${'★'.repeat(q.difficulty)}${'☆'.repeat(3 - q.difficulty)}`;
 
+    const bonusType = CATEGORY_BONUS_TYPE[q.category];
     const bonusHint = document.createElement('span');
     bonusHint.style.cssText = 'font-size:10px;color:#7fc47f;';
-    const bonusType = CATEGORY_BONUS_TYPE[q.category];
-    bonusHint.textContent = bonusType === 'combat' ? '⚔ Bono Combate' :
-                            bonusType === 'move'   ? '👣 Bono Movimiento' : '🎨 Ítem Estético';
+    bonusHint.textContent = bonusType === 'combat' ? '⚔ Bono Combate'
+                          : bonusType === 'move'   ? '👣 Bono Movimiento'
+                          :                          '🎨 Ítem Estético';
     header.appendChild(catLabel);
     header.appendChild(bonusHint);
 
     // Pregunta
     const questionEl = document.createElement('p');
-    questionEl.style.cssText = 'font-size:17px;line-height:1.5;margin-bottom:22px;color:#f0d890;';
+    questionEl.style.cssText = 'font-size:17px;line-height:1.6;margin-bottom:24px;color:#f0d890;';
     questionEl.textContent = q.question;
 
+    // Cuenta regresiva de lectura
+    const readingEl = document.createElement('div');
+    readingEl.style.cssText = `
+      text-align:center; font-size:28px; color:#d4a843;
+      padding:16px 0; letter-spacing:4px;
+    `;
+    readingEl.textContent = 'Leyendo... 2';
+
+    box.appendChild(header);
+    box.appendChild(questionEl);
+    box.appendChild(readingEl);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    this._overlay = overlay;
+
+    // Cuenta regresiva 2 → 1 → opciones
+    let count = 2;
+    const countdown = setInterval(() => {
+      count--;
+      if (count > 0) {
+        readingEl.textContent = `Leyendo... ${count}`;
+      } else {
+        clearInterval(countdown);
+        // Reemplazar el readingEl por el timer + opciones
+        box.removeChild(readingEl);
+        this._renderOptions(q, box, overlay, bonusType);
+      }
+    }, 1000);
+  }
+
+  // ── FASE 2: Timer + opciones ───────────────────────────────
+  _renderOptions(q, box, overlay, bonusType) {
     // Timer bar
     const timerWrap = document.createElement('div');
-    timerWrap.style.cssText = 'background:#2a1500;border-radius:4px;height:6px;margin-bottom:18px;overflow:hidden;';
+    timerWrap.style.cssText = 'background:#2a1500;border-radius:4px;height:6px;margin-bottom:4px;overflow:hidden;';
     const timerBar = document.createElement('div');
-    timerBar.style.cssText = 'height:100%;width:100%;background:#d4a843;transition:width 0.1s linear;border-radius:4px;';
+    timerBar.style.cssText = 'height:100%;width:100%;background:#7fc47f;transition:width 0.1s linear;border-radius:4px;';
     timerWrap.appendChild(timerBar);
 
     const timerLabel = document.createElement('div');
@@ -94,103 +133,118 @@ export class TriviaModal {
         padding:10px 14px; text-align:left; cursor:pointer;
         transition:background 0.15s, border-color 0.15s;
       `;
-      btn.onmouseover = () => { btn.style.background='#3a1a00'; btn.style.borderColor='#d4a843'; };
-      btn.onmouseout  = () => { btn.style.background='#2a1200'; btn.style.borderColor='#5a3a10'; };
-      btn.textContent = `${['A','B','C','D'][idx]}. ${opt}`;
-      btn.addEventListener('click', () => this._answer(idx, q, overlay));
+      btn.onmouseover = () => { btn.style.background = '#3a1a00'; btn.style.borderColor = '#d4a843'; };
+      btn.onmouseout  = () => { btn.style.background = '#2a1200'; btn.style.borderColor = '#5a3a10'; };
+      btn.textContent = `${['A', 'B', 'C', 'D'][idx]}. ${opt}`;
+      btn.addEventListener('click', () => this._answer(idx, q, overlay, bonusType));
       optionsEl.appendChild(btn);
     });
 
-    box.appendChild(header);
-    box.appendChild(questionEl);
     box.appendChild(timerWrap);
     box.appendChild(timerLabel);
     box.appendChild(optionsEl);
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-    this._overlay = overlay;
 
-    // Iniciar temporizador
+    // Iniciar temporizador ahora
     this._startMs = performance.now();
     const interval = setInterval(() => {
-      const elapsed = performance.now() - this._startMs;
+      const elapsed   = performance.now() - this._startMs;
       const remaining = Math.max(0, TOTAL_TIME - elapsed);
-      const pct = (remaining / TOTAL_TIME) * 100;
-      timerBar.style.width = `${pct}%`;
+      const pct       = (remaining / TOTAL_TIME) * 100;
+      timerBar.style.width      = `${pct}%`;
       timerBar.style.background = pct > 60 ? '#7fc47f' : pct > 30 ? '#d4a843' : '#c04040';
-      timerLabel.textContent = `${Math.ceil(remaining / 1000)}s`;
+      timerLabel.textContent    = `${Math.ceil(remaining / 1000)}s`;
 
       if (remaining <= 0) {
         clearInterval(interval);
-        this._timeout(q, overlay);
+        this._timeout(q, overlay, bonusType);
       }
     }, 100);
     this._timer = interval;
   }
 
-  _answer(selectedIdx, q, overlay) {
+  _answer(selectedIdx, q, overlay, bonusType) {
     const elapsed = performance.now() - this._startMs;
     clearInterval(this._timer);
 
     const correct = selectedIdx === q.answer;
     let bonusAmount = 0;
+    let medal = null;
 
     if (correct) {
-      if (elapsed < FAST_THRESHOLD)        bonusAmount = 3;
-      else if (elapsed < MEDIUM_THRESHOLD) bonusAmount = 2;
-      else                                  bonusAmount = 1;
+      if (elapsed < FAST_THRESHOLD) {
+        bonusAmount = 3;
+        medal = { emoji: '🏅', label: '¡Héroe!', color: '#ffd700' };
+      } else if (elapsed < MEDIUM_THRESHOLD) {
+        bonusAmount = 2;
+        medal = { emoji: '🎖', label: 'Veterano', color: '#b0c8e0' };
+      } else {
+        bonusAmount = 1;
+        medal = { emoji: '📜', label: 'Soldado', color: '#c8a060' };
+      }
+      medalHistory.push({ medal, category: q.category, elapsed });
     }
 
-    const bonusType = CATEGORY_BONUS_TYPE[q.category];
-    this._showResult(overlay, correct, bonusAmount, bonusType, q, selectedIdx, elapsed);
+    this._showResult(overlay, correct, bonusAmount, bonusType, q, selectedIdx, elapsed, medal);
   }
 
-  _timeout(q, overlay) {
-    this._showResult(overlay, false, 0, CATEGORY_BONUS_TYPE[q.category], q, -1, TOTAL_TIME);
+  _timeout(q, overlay, bonusType) {
+    this._showResult(overlay, false, 0, bonusType, q, -1, TOTAL_TIME, null);
   }
 
-  _showResult(overlay, correct, bonusAmount, bonusType, q, selectedIdx, elapsed) {
-    // Limpiar botones y mostrar resultado
-    const box = overlay.querySelector('div');
+  _showResult(overlay, correct, bonusAmount, bonusType, q, selectedIdx, elapsed, medal) {
+    const box  = overlay.querySelector('div');
     const btns = box.querySelectorAll('button');
 
     btns.forEach((btn, idx) => {
       if (idx === q.answer) {
-        btn.style.background = '#0a3010';
+        btn.style.background  = '#0a3010';
         btn.style.borderColor = '#7fc47f';
-        btn.style.color = '#7fc47f';
+        btn.style.color       = '#7fc47f';
       } else if (idx === selectedIdx) {
-        btn.style.background = '#3a0a0a';
+        btn.style.background  = '#3a0a0a';
         btn.style.borderColor = '#c04040';
-        btn.style.color = '#c04040';
+        btn.style.color       = '#c04040';
       }
-      btn.style.cursor = 'default';
-      btn.onmouseover = null;
-      btn.onmouseout  = null;
+      btn.style.cursor  = 'default';
+      btn.onmouseover   = null;
+      btn.onmouseout    = null;
     });
 
-    // Resultado
     const resultEl = document.createElement('div');
     resultEl.style.cssText = `
-      margin-top:18px; padding:12px 16px;
-      border-radius:5px; text-align:center; font-size:14px;
+      margin-top:18px; padding:14px 16px;
+      border-radius:5px; text-align:center;
       background:${correct ? '#0a2010' : '#200a0a'};
       border:1px solid ${correct ? '#7fc47f' : '#c04040'};
       color:${correct ? '#7fc47f' : '#c04040'};
     `;
 
     const secs = (elapsed / 1000).toFixed(1);
+
     if (selectedIdx === -1) {
-      resultEl.innerHTML = `⏰ <strong>Tiempo agotado</strong> — Sin bono`;
-    } else if (correct) {
-      const speed = elapsed < FAST_THRESHOLD ? '⚡ ¡Rápido!' : elapsed < MEDIUM_THRESHOLD ? '✓ A tiempo' : '🐢 Lento';
-      resultEl.innerHTML = `${speed} · <strong>+${bonusAmount}</strong> al banco de <em>${bonusType === 'combat' ? 'Combate' : bonusType === 'move' ? 'Movimiento' : 'Estético'}</em> (${secs}s)`;
+      resultEl.innerHTML = `<div style="font-size:24px">⏰</div><strong>Tiempo agotado</strong> — Sin bono`;
+    } else if (correct && medal) {
+      resultEl.innerHTML = `
+        <div style="font-size:42px;margin-bottom:6px">${medal.emoji}</div>
+        <div style="font-size:16px;font-weight:bold;color:${medal.color}">${medal.label}</div>
+        <div style="font-size:12px;margin-top:6px;color:#a8c0a0">
+          +${bonusAmount} al banco de <em>${bonusType === 'combat' ? 'Combate' : bonusType === 'move' ? 'Movimiento' : 'Estético'}</em>
+          · ${secs}s
+        </div>
+      `;
     } else {
-      resultEl.innerHTML = `✗ Incorrecto · Sin bono · Respuesta: <strong>${q.options[q.answer]}</strong>`;
+      resultEl.innerHTML = `
+        <div style="font-size:20px">✗</div>
+        <div>Incorrecto · Sin bono</div>
+        <div style="margin-top:6px;font-size:12px">
+          Respuesta correcta: <strong style="color:#f0d890">${q.options[q.answer]}</strong>
+        </div>
+      `;
     }
+
     box.appendChild(resultEl);
 
-    // Cerrar automáticamente después de 2s
+    // Cerrar automáticamente
     setTimeout(() => {
       this._cleanup();
       if (this._resolve) {

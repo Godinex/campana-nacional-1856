@@ -435,7 +435,232 @@ export const TRIVIA_QUESTIONS = [
     answer: 1,
     note: 'Historia militar · fuerzas irregulares',
   },
+
+  // ═══════════════════════════════════════════════
+  // HISTORIA — NUEVAS (primaria + secundaria)
+  // ═══════════════════════════════════════════════
+  {
+    id: 'h-p-11', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Qué enfermedad mató a muchos soldados costarricenses durante la Campaña Nacional?',
+    options: ['Malaria', 'Cólera', 'Viruela', 'Fiebre amarilla'],
+    answer: 1,
+    note: 'MEP CR · consecuencias sanitarias de la campaña',
+  },
+  {
+    id: 'h-p-12', category: 'historia', level: 'primaria', difficulty: 2,
+    question: '¿Qué país centroamericano se unió a la coalición aliada pero llegó más tarde al conflicto?',
+    options: ['Costa Rica', 'Guatemala', 'Belice', 'Panamá'],
+    answer: 1,
+    note: 'Coalición centroamericana',
+  },
+  {
+    id: 'h-s-11', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué potencia extranjera bloqueó el río San Juan para debilitar a Walker en 1857?',
+    options: ['Francia', 'Gran Bretaña', 'España', 'Estados Unidos (gobierno federal)'],
+    answer: 1,
+    note: 'Geopolítica del conflicto · intereses en la ruta interoceánica',
+  },
+  {
+    id: 'h-s-12', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué la ruta del río San Juan era estratégicamente vital para Walker?',
+    options: [
+      'Era la única fuente de agua potable en Nicaragua',
+      'Controlaba el tránsito interoceánico y el suministro de tropas y armas desde EE.UU.',
+      'Unía las capitales de Nicaragua y Costa Rica',
+      'Era la frontera natural reconocida por Gran Bretaña',
+    ],
+    answer: 1,
+    note: 'Estrategia · Compañía Accesoria del Tránsito',
+  },
+
+  // ═══════════════════════════════════════════════
+  // TÁCTICA — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 't-p-04', category: 'tactica', level: 'primaria', difficulty: 1,
+    question: '¿Qué ventaja tenían los aliados al conocer mejor la geografía del terreno centroamericano?',
+    options: [
+      'Podían moverse más rápido por caminos conocidos y emboscar al enemigo',
+      'Tenían mejores uniformes',
+      'Sus rifles eran más modernos',
+      'Recibían apoyo aéreo',
+    ],
+    answer: 0,
+    note: 'Táctica · ventaja del terreno propio',
+  },
+  {
+    id: 't-s-04', category: 'tactica', level: 'secundaria', difficulty: 2,
+    question: '¿Por qué los aliados optaron por incendiar Rivas en lugar de atacarla frontalmente?',
+    options: [
+      'Para destruir los depósitos de alimentos y municiones filibusteras',
+      'Por error durante el combate',
+      'Órdenes directas de Walker',
+      'Para señalizar la posición a otras tropas aliadas',
+    ],
+    answer: 0,
+    note: 'Táctica · batalla de Rivas · acción de Juan Santamaría',
+  },
+  {
+    id: 't-s-05', category: 'tactica', level: 'secundaria', difficulty: 3,
+    question: '¿Qué táctica usaron los ejércitos aliados para cortar el suministro de Walker sin combate directo prolongado?',
+    options: [
+      'Bloqueo de puertos del Pacífico',
+      'Cerco y bloqueo del río San Juan, cortando refuerzos y provisiones',
+      'Alianza con tribus indígenas del interior',
+      'Destrucción de los cañones filibusteros',
+    ],
+    answer: 1,
+    note: 'Estrategia de sitio · coalición centroamericana',
+  },
+  {
+    id: 't-p-05', category: 'tactica', level: 'primaria', difficulty: 2,
+    question: '¿Cuál fue la estrategia principal de Costa Rica al inicio de la campaña en 1856?',
+    options: [
+      'Esperar a que Walker atacara primero',
+      'Avanzar rápidamente para sorprender a los filibusteros en Santa Rosa',
+      'Pedir ayuda a España',
+      'Bloquear los puertos del Pacífico',
+    ],
+    answer: 1,
+    note: 'MEP CR · Campaña de 1856 · marcha hacia Santa Rosa',
+  },
+
+  // ═══════════════════════════════════════════════
+  // GEOGRAFÍA — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'g-p-06', category: 'geografia', level: 'primaria', difficulty: 1,
+    question: '¿Qué lago nicaragüense era clave para el control del territorio durante la campaña?',
+    options: ['Lago de Managua', 'Lago de Nicaragua (Cocibolca)', 'Lago Arenal', 'Lago Gatún'],
+    answer: 1,
+    note: 'Geografía · Nicaragua · ruta interoceánica',
+  },
+  {
+    id: 'g-p-07', category: 'geografia', level: 'primaria', difficulty: 2,
+    question: '¿Por qué ciudad nicaragüense estableció Walker su capital y base de operaciones?',
+    options: ['Managua', 'León', 'Granada', 'Masaya'],
+    answer: 2,
+    note: 'Granada · capital filibustera',
+  },
+  {
+    id: 'g-s-04', category: 'geografia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué río forma parte de la frontera entre Costa Rica y Nicaragua y fue escenario de operaciones militares?',
+    options: ['Río Tempisque', 'Río San Juan', 'Río Reventazón', 'Río Sarapiquí'],
+    answer: 1,
+    note: 'Geografía · frontera · ruta interoceánica',
+  },
+  {
+    id: 'g-s-05', category: 'geografia', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué la hacienda Santa Rosa era una posición geográficamente estratégica para detener el avance filibustero?',
+    options: [
+      'Era el único paso natural entre Guanacaste y el interior de Costa Rica',
+      'Tenía una fortaleza colonial construida por España',
+      'Estaba en la cima de una montaña con visión de 360°',
+      'Poseía el único pozo de agua en la región',
+    ],
+    answer: 0,
+    note: 'MEP CR · Batalla de Santa Rosa · geografía de Guanacaste',
+  },
+
+  // ═══════════════════════════════════════════════
+  // ARMAS — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'a-p-03', category: 'armas', level: 'primaria', difficulty: 1,
+    question: '¿Qué arma blanca era común entre los soldados centroamericanos durante la Campaña Nacional?',
+    options: ['Sable de caballería', 'Machete', 'Bayoneta francesa', 'Hacha de guerra'],
+    answer: 1,
+    note: 'Armamento · infantería centroamericana',
+  },
+  {
+    id: 'a-p-04', category: 'armas', level: 'primaria', difficulty: 2,
+    question: '¿Qué tipo de artillería usaban los ejércitos aliados centroamericanos principalmente?',
+    options: ['Cañones de campaña tirados por caballos', 'Morteros de sitio', 'Artillería naval', 'No usaban artillería'],
+    answer: 0,
+    note: 'Armamento · artillería de campaña siglo XIX',
+  },
+  {
+    id: 'a-s-03', category: 'armas', level: 'secundaria', difficulty: 2,
+    question: '¿Qué ventaja táctica daba el rifle de percusión sobre el mosquete de chispa en la época de la campaña?',
+    options: [
+      'Era más pesado y causaba más daño',
+      'Mayor alcance, precisión y fiabilidad en condiciones húmedas tropicales',
+      'Podía disparar más rápido en salvas',
+      'No necesitaba pólvora negra',
+    ],
+    answer: 1,
+    note: 'Historia del armamento · siglo XIX',
+  },
+  {
+    id: 'a-s-04', category: 'armas', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué los filibusteros de Walker tenían ventaja armamentística inicial sobre las fuerzas aliadas?',
+    options: [
+      'Eran entrenados por el ejército prusiano',
+      'Traían rifles modernos y experiencia de combate de las guerras civiles estadounidenses',
+      'Contaban con apoyo de artillería naval británica',
+      'Usaban explosivos que los aliados desconocían',
+    ],
+    answer: 1,
+    note: 'Historia militar · ventaja filibustera inicial',
+  },
+
+  // ═══════════════════════════════════════════════
+  // UNIFORMES — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'u-p-03', category: 'uniformes', level: 'primaria', difficulty: 1,
+    question: '¿De qué color era el uniforme de los soldados costarricenses durante la Campaña Nacional?',
+    options: ['Rojo y amarillo', 'Azul y blanco', 'Verde olivo', 'Negro'],
+    answer: 1,
+    note: 'MEP CR · uniformes históricos costarricenses',
+  },
+  {
+    id: 'u-p-04', category: 'uniformes', level: 'primaria', difficulty: 2,
+    question: '¿Qué tipo de sombrero usaban típicamente los soldados de infantería aliados en 1856?',
+    options: ['Quepis (kepí) de tela', 'Casco de metal', 'Sombrero de copa alta', 'Turbante'],
+    answer: 0,
+    note: 'Uniformes militares centroamericanos siglo XIX',
+  },
+  {
+    id: 'u-s-03', category: 'uniformes', level: 'secundaria', difficulty: 2,
+    question: '¿Qué elemento del uniforme diferenciaba a los oficiales de los soldados rasos en los ejércitos aliados?',
+    options: [
+      'El color del pantalón',
+      'Las charreteras, galones en la manga y tipo de sable',
+      'El tamaño de la mochila',
+      'El número de botones en el capote',
+    ],
+    answer: 1,
+    note: 'Jerarquía militar · uniformes del siglo XIX',
+  },
+  {
+    id: 'u-s-04', category: 'uniformes', level: 'secundaria', difficulty: 3,
+    question: '¿Cómo influyó el clima tropical centroamericano en el diseño práctico de los uniformes aliados?',
+    options: [
+      'Se adoptaron telas ligeras de algodón y colores claros para soportar el calor y la humedad',
+      'Se copiaron exactamente los uniformes europeos sin modificación',
+      'Se usaron pieles de animales locales',
+      'El clima no tuvo ningún efecto en el diseño de uniformes',
+    ],
+    answer: 0,
+    note: 'Adaptación de uniformes · condiciones tropicales',
+  },
 ];
+
+// ── Memoria de preguntas usadas (sin repetición) ─────────────
+const _usedIds = new Set();
+
+function _markUsed(id) {
+  _usedIds.add(id);
+}
+
+function _resetIfExhausted(pool) {
+  // Si todas las preguntas del pool ya fueron usadas, reiniciar solo ese pool
+  const allUsed = pool.every(q => _usedIds.has(q.id));
+  if (allUsed) {
+    pool.forEach(q => _usedIds.delete(q.id));
+  }
+}
 
 // ── Utilidades ──────────────────────────────────────────────
 
@@ -452,7 +677,16 @@ export function getRandomQuestion(category = null, level = null) {
   if (category) pool = pool.filter(q => q.category === category);
   if (level)    pool = pool.filter(q => q.level === level);
   if (pool.length === 0) pool = TRIVIA_QUESTIONS; // fallback
-  return pool[Math.floor(Math.random() * pool.length)];
+
+  // Evitar repetición — filtrar ya usadas
+  _resetIfExhausted(pool);
+  const available = pool.filter(q => !_usedIds.has(q.id));
+  const chosen = available.length > 0
+    ? available[Math.floor(Math.random() * available.length)]
+    : pool[Math.floor(Math.random() * pool.length)]; // último recurso
+
+  _markUsed(chosen.id);
+  return chosen;
 }
 
 // Categoría → tipo de bono
