@@ -1,289 +1,668 @@
 // ============================================================
 // BASE DE PREGUNTAS — La Campaña Nacional 1856-1857
 // Alineado a programas de Estudios Sociales de Centroamérica
-// MEP CR · MINED NI · SEP HN · MINED SV · MINEDUC GT
+// MEP Costa Rica · MINED Nicaragua · SEP Honduras · MINED El Salvador · MINEDUC Guatemala
+//
+// Categorías:
+//   'historia'   → bono combate
+//   'tactica'    → bono combate
+//   'geografia'  → bono movimiento
+//   'armas'      → ítem estético
+//   'uniformes'  → ítem estético
+//
+// Niveles:
+//   'primaria'   → 4to–6to grado (9–12 años)
+//   'secundaria' → 7mo–9no grado (12–15 años)
 // ============================================================
 
 export const TRIVIA_QUESTIONS = [
 
-  // ═══════ HISTORIA · PRIMARIA ════════════════════════════
-  { id:'hp01', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Quién era el presidente de Costa Rica durante la Campaña Nacional?',
-    options:['Tomás Guardia','Juan Rafael Mora Porras','Braulio Carrillo','Próspero Fernández'], answer:1 },
-  { id:'hp02', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Quién fue el héroe costarricense que quemó el mesón en Rivas?',
-    options:['Lorenzo Salazar','Máximo Blanco','Manuel Quirós','Juan Santamaría'], answer:3 },
-  { id:'hp03', category:'historia', level:'primaria', difficulty:1,
-    question:'¿De qué país venía William Walker?',
-    options:['Estados Unidos','Inglaterra','España','México'], answer:0 },
-  { id:'hp04', category:'historia', level:'primaria', difficulty:1,
-    question:'¿En qué país se desarrolló la mayor parte de la campaña?',
-    options:['Costa Rica','Honduras','Nicaragua','Guatemala'], answer:2 },
-  { id:'hp05', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Cómo se llama la primera batalla que ganó Costa Rica?',
-    options:['Batalla de Rivas','Batalla de Santa Rosa','Batalla de San Jacinto','Batalla de Granada'], answer:1 },
-  { id:'hp06', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Qué apodo tiene Juan Santamaría?',
-    options:['El Héroe','El General','El Voluntario','El Tambor'], answer:3 },
-  { id:'hp07', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Cuántos países centroamericanos lucharon contra Walker?',
-    options:['5','3','4','6'], answer:0 },
-  { id:'hp08', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Qué ciudad nicaragüense capturó Walker para usarla como su capital?',
-    options:['Managua','León','Granada','Masaya'], answer:2 },
-  { id:'hp09', category:'historia', level:'primaria', difficulty:2,
-    question:'¿En qué año comenzó la Campaña Nacional?',
-    options:['1854','1856','1855','1858'], answer:1 },
-  { id:'hp10', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Qué enfermedad mató a más soldados costarricenses que las balas?',
-    options:['Viruela','Sarampión','Cólera','Fiebre amarilla'], answer:3 },
-  { id:'hp11', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Quién llamó al pueblo de Costa Rica a defender la patria en 1856?',
-    options:['Juan Rafael Mora','Juan Santamaría','El Obispo Llorente','Tomás Guardia'], answer:0 },
-  { id:'hp12', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Dónde fue fusilado William Walker finalmente?',
-    options:['Nicaragua','Costa Rica','Honduras','Guatemala'], answer:2 },
-  { id:'hp13', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Qué acción heroica realizó Andrés Castro en la Batalla de San Jacinto?',
-    options:['Salvó la bandera','Luchó con una piedra al quedarse sin balas','Quemó el puente','Capturó a Walker'], answer:1 },
-  { id:'hp14', category:'historia', level:'primaria', difficulty:2,
-    question:'¿En qué mes y año se libró la Batalla de Santa Rosa?',
-    options:['Enero 1856','Febrero 1856','Abril 1856','Marzo 1856'], answer:3 },
-  { id:'hp15', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Qué representa el 11 de abril en Costa Rica?',
-    options:['El día de la batalla de Rivas y Juan Santamaría','El inicio de la campaña','El día de la rendición de Walker','El día de independencia'], answer:0 },
+  // ═══════════════════════════════════════════════
+  // HISTORIA — PRIMARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'h-p-01', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Quién era el presidente de Costa Rica durante la Campaña Nacional?',
+    options: ['Tomás Guardia', 'Juan Rafael Mora Porras', 'Braulio Carrillo', 'Próspero Fernández'],
+    answer: 1,
+    note: 'MEP CR · 7mo grado · Unidad 3',
+  },
+  {
+    id: 'h-p-02', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Quién fue el héroe costarricense que quemó el mesón en Rivas?',
+    options: ['Lorenzo Salazar', 'Máximo Blanco', 'Manuel Quirós', 'Juan Santamaría'],
+    answer: 3,
+    note: 'MEP CR · 7mo grado · Figura heroica nacional',
+  },
+  {
+    id: 'h-p-03', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿De qué país venía William Walker, el líder de los filibusteros?',
+    options: ['Estados Unidos', 'Inglaterra', 'España', 'México'],
+    answer: 0,
+    note: 'MEP CR · MINED NI · contenido básico',
+  },
+  {
+    id: 'h-p-04', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿En qué país centroamericano se desarrolló la mayor parte de la campaña?',
+    options: ['Costa Rica', 'Honduras', 'Nicaragua', 'Guatemala'],
+    answer: 2,
+    note: 'MINED NI · contenido básico',
+  },
+  {
+    id: 'h-p-05', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Cómo se llama la batalla donde Costa Rica ganó su primera victoria?',
+    options: ['Batalla de Rivas', 'Batalla de Santa Rosa', 'Batalla de San Jacinto', 'Batalla de Granada'],
+    answer: 1,
+    note: 'MEP CR · 7mo grado',
+  },
+  {
+    id: 'h-p-06', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Qué apodo tiene Juan Santamaría en Costa Rica?',
+    options: ['El Héroe', 'El General', 'El Voluntario', 'El Tambor'],
+    answer: 3,
+    note: 'MEP CR · símbolo nacional',
+  },
+  {
+    id: 'h-p-07', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Cuántos países centroamericanos lucharon contra Walker?',
+    options: ['5', '2', '3', '4'],
+    answer: 0,
+    note: 'Contenido regional centroamericano',
+  },
+  {
+    id: 'h-p-08', category: 'historia', level: 'primaria', difficulty: 2,
+    question: '¿En qué año comenzó la Campaña Nacional?',
+    options: ['1854', '1855', '1856', '1858'],
+    answer: 2,
+    note: 'MEP CR · MINED NI',
+  },
+  {
+    id: 'h-p-09', category: 'historia', level: 'primaria', difficulty: 2,
+    question: '¿Qué enfermedad afectó gravemente a los soldados costarricenses al regresar?',
+    options: ['Viruela', 'Fiebre amarilla', 'Sarampión', 'Cólera'],
+    answer: 1,
+    note: 'MEP CR · impacto humano de la campaña',
+  },
+  {
+    id: 'h-p-10', category: 'historia', level: 'primaria', difficulty: 2,
+    question: '¿Qué ciudad nicaragüense capturó Walker como su capital?',
+    options: ['Managua', 'León', 'Masaya', 'Granada'],
+    answer: 3,
+    note: 'MINED NI · 6to grado',
+  },
 
-  // ═══════ HISTORIA · SECUNDARIA ══════════════════════════
-  { id:'hs01', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué doctrina política de EE.UU. impulsó la expansión filibustera en Centroamérica?',
-    options:['Doctrina Monroe','Doctrina Truman','Destino Manifiesto','Política del Buen Vecino'], answer:2 },
-  { id:'hs02', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Por qué Walker legalizó la esclavitud en Nicaragua en 1856?',
-    options:['Tradición colonial','Para atraer el apoyo de los estados esclavistas del sur de EE.UU.','Por presión inglesa','Por petición de los terratenientes'], answer:1 },
-  { id:'hs03', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué papel jugó Cornelio Vanderbilt en el conflicto con Walker?',
-    options:['Financió el ejército aliado directamente','Fue aliado incondicional de Walker','Negoció la paz','Retiró su apoyo a Walker y financió a sus enemigos'], answer:3 },
-  { id:'hs04', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Cuáles fueron las tres fases de la Campaña Nacional según el MEP de Costa Rica?',
-    options:['Primera, Segunda y Tercera Campaña','Invasión, Batalla y Paz','Defensa, Ataque y Rendición','Santa Rosa, Rivas y Granada'], answer:0 },
-  { id:'hs05', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Cómo contribuyó la Campaña Nacional a la identidad nacional costarricense?',
-    options:['Estableció la religión oficial','Llevó a CR a unirse a la Federación','Fue el primer esfuerzo colectivo que unificó a los costarricenses como nación','Generó la primera constitución'], answer:2 },
-  { id:'hs06', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Quién comandó las fuerzas hondureñas en la Campaña Nacional?',
-    options:['Santos Guardiola','Florencio Xatruch','José Trinidad Cabañas','Francisco Ferrera'], answer:1 },
-  { id:'hs07', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué general salvadoreño lideró las tropas de El Salvador?',
-    options:['Gerardo Barrios','Francisco Dueñas','Santiago González','Ramón Belloso'], answer:3 },
-  { id:'hs08', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Cuál fue la capitulación que puso fin a Walker en Nicaragua en 1857?',
-    options:['Capitulación de La Trinidad','Tratado de Rivas','Acuerdo de Granada','Rendición de San Juan del Sur'], answer:0 },
-  { id:'hs09', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué nación extranjera transportó a Walker fuera de Centroamérica en 1857?',
-    options:['Gran Bretaña','Francia','Estados Unidos','México'], answer:2 },
-  { id:'hs10', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Qué poeta o escritor documentó la Campaña Nacional con canciones patrióticas costarricenses?',
-    options:['Ricardo Fernández Guardia','Tadeo Nadeo Gómez','Manuel González Zeledón','Aquileo Echeverría'], answer:1 },
-  { id:'hs11', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Por qué el cabildo abierto de noviembre de 1855 fue importante para la Campaña?',
-    options:['Se votó la constitución de guerra','Se eligió al general en jefe','Se firmó la alianza con Nicaragua','La población discutió y apoyó unánimemente el llamado de Mora a defender la patria'], answer:3 },
-  { id:'hs12', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué rango militar se autoproclamó Walker cuando gobernó Nicaragua?',
-    options:['Presidente y General en Jefe','General','Coronel','Almirante'], answer:0 },
-  { id:'hs13', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Qué importancia tuvo la Campaña Nacional para la soberanía de Nicaragua según el MINED?',
-    options:['Fue el origen de la Guardia Nacional','Llevó a la anexión de Nicaragua a EE.UU.','Demostró que Nicaragua podía defender su soberanía con aliados centroamericanos','Fue el inicio de la independencia'], answer:2 },
-  { id:'hs14', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Cuál fue el impacto de la fiebre amarilla en la Primera Campaña costarricense?',
-    options:['Mató a Walker','Obligó a Costa Rica a retirarse temporalmente y reorganizarse','Afectó solo a los filibusteros','No tuvo impacto significativo'], answer:1 },
-  { id:'hs15', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Qué frase dejó Walker escrita al quemar Granada, símbolo de su crueldad?',
-    options:['"Nicaragua es mía"','"Cenizas para los rebeldes"','"La gloria es del vencedor"','"Aquí fue Granada"'], answer:3 },
+  // ═══════════════════════════════════════════════
+  // HISTORIA — SECUNDARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'h-s-01', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué doctrina política de EE.UU. impulsó la expansión filibustera en Centroamérica?',
+    options: ['Destino Manifiesto', 'Doctrina Monroe', 'Doctrina Truman', 'Política del Buen Vecino'],
+    answer: 0,
+    note: 'MEP CR · 9no grado · contexto imperialismo',
+  },
+  {
+    id: 'h-s-02', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Bajo qué argumento Walker legalizó la esclavitud en Nicaragua en 1856?',
+    options: [
+      'Para atraer inversión inglesa',
+      'Por tradición colonial española',
+      'Para ganarse el apoyo de los estados esclavistas del sur de EE.UU.',
+      'Por petición de los terratenientes nicaragüenses'
+    ],
+    answer: 2,
+    note: 'MEP CR · 9no grado · contexto político',
+  },
+  {
+    id: 'h-s-03', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué papel jugó Cornelio Vanderbilt en el conflicto contra Walker?',
+    options: [
+      'Financió el ejército aliado',
+      'Retiró su apoyo a Walker y financió a sus enemigos tras un conflicto de negocios',
+      'Fue aliado incondicional de Walker',
+      'Negoció la paz entre Walker y los aliados',
+    ],
+    answer: 1,
+    note: 'MEP CR · 9no grado · factores económicos',
+  },
+  {
+    id: 'h-s-04', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué tres fases tuvo la Campaña Nacional de Costa Rica según el MEP?',
+    options: [
+      'Invasión, Batalla y Paz',
+      'Defensa, Ataque y Rendición',
+      'Santa Rosa, Rivas y Granada',
+      'Primera, Segunda y Tercera Campaña'
+    ],
+    answer: 3,
+    note: 'MEP CR · estructura curricular oficial',
+  },
+  {
+    id: 'h-s-05', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Cómo contribuyó la Campaña Nacional a forjar la identidad nacional costarricense?',
+    options: [
+      'Fue el primer esfuerzo colectivo que unificó a todos los costarricenses como nación',
+      'Estableció la religión oficial del país',
+      'Llevó a Costa Rica a unirse a la Federación Centroamericana',
+      'Generó la primera constitución del país'
+    ],
+    answer: 0,
+    note: 'MEP CR · identidad nacional · Víctor Hugo Acuña',
+  },
+  {
+    id: 'h-s-06', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿En qué año y país fue fusilado William Walker?',
+    options: ['1859, Nicaragua', '1861, Costa Rica', '1860, Honduras', '1862, Guatemala'],
+    answer: 2,
+    note: 'SEP HN · Historia de Honduras',
+  },
+  {
+    id: 'h-s-07', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Quién comandó las fuerzas hondureñas en la Campaña Nacional?',
+    options: ['Santos Guardiola', 'Florencio Xatruch', 'José Trinidad Cabañas', 'Francisco Ferrera'],
+    answer: 1,
+    note: 'SEP HN · héroe nacional de Honduras',
+  },
+  {
+    id: 'h-s-08', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué general salvadoreño lideró las tropas de El Salvador en la campaña?',
+    options: ['Gerardo Barrios', 'Francisco Dueñas', 'Santiago González', 'Ramón Belloso'],
+    answer: 3,
+    note: 'MINED SV · Historia de El Salvador',
+  },
+  {
+    id: 'h-s-09', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Qué importancia histórica tiene la Campaña Nacional para Nicaragua según el MINED?',
+    options: [
+      'Demostró que Nicaragua podía defender su soberanía con aliados centroamericanos',
+      'Fue el origen de la Guardia Nacional',
+      'Llevó a la anexión de Nicaragua a EE.UU.',
+      'Fue el inicio de la independencia de Nicaragua'
+    ],
+    answer: 0,
+    note: 'MINED NI · soberanía e identidad nacional',
+  },
+  {
+    id: 'h-s-10', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Cuál fue la capitulación que puso fin a la presencia de Walker en Nicaragua en 1857?',
+    options: [
+      'Tratado de Rivas',
+      'Acuerdo de Granada',
+      'Capitulación de La Trinidad',
+      'Rendición de San Juan del Sur'
+    ],
+    answer: 2,
+    note: 'MEP CR · fin de la campaña',
+  },
 
-  // ═══════ TÁCTICA · PRIMARIA ═════════════════════════════
-  { id:'tp01', category:'tactica', level:'primaria', difficulty:1,
-    question:'¿Qué hizo Juan Santamaría para expulsar a los filibusteros del mesón en Rivas?',
-    options:['Prendió fuego al edificio','Los atacó con cañones','Negoció su rendición','Bloqueó el río'], answer:0 },
-  { id:'tp02', category:'tactica', level:'primaria', difficulty:2,
-    question:'¿Por qué los aliados querían controlar el Río San Juan?',
-    options:['Para pescar','Era la frontera con Costa Rica','Para impedir que Walker recibiera refuerzos','Para construir un canal'], answer:2 },
-  { id:'tp03', category:'tactica', level:'primaria', difficulty:2,
-    question:'¿Qué ventaja tenían los filibusteros sobre los soldados centroamericanos?',
-    options:['Eran más numerosos','Tenían armas más modernas','Conocían mejor el terreno','Tenían más aliados'], answer:1 },
-  { id:'tp04', category:'tactica', level:'primaria', difficulty:2,
-    question:'¿Qué hicieron los aliados para que Walker no pudiera recibir más soldados de EE.UU.?',
-    options:['Construyeron un muro','Pidieron ayuda a Inglaterra','Rodearon EE.UU.','Bloquearon la Ruta de Tránsito y el Río San Juan'], answer:3 },
-  { id:'tp05', category:'tactica', level:'primaria', difficulty:1,
-    question:'¿Qué ejércitos centroamericanos se unieron para rodear a Walker en Rivas?',
-    options:['Los 5 países centroamericanos','Solo Costa Rica','Costa Rica y Nicaragua','Solo Nicaragua y Honduras'], answer:0 },
+  // ═══════════════════════════════════════════════
+  // TÁCTICA — PRIMARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 't-p-01', category: 'tactica', level: 'primaria', difficulty: 1,
+    question: '¿Qué hizo Juan Santamaría para expulsar a los filibusteros del mesón en Rivas?',
+    options: ['Los atacó con cañones', 'Prendió fuego al edificio con una antorcha', 'Negoció su rendición', 'Bloqueó el río'],
+    answer: 1,
+    note: 'MEP CR · acción heroica táctica',
+  },
+  {
+    id: 't-p-02', category: 'tactica', level: 'primaria', difficulty: 2,
+    question: '¿Por qué los aliados querían controlar el Río San Juan?',
+    options: [
+      'Para pescar y alimentar a los soldados',
+      'Porque era la frontera con Costa Rica',
+      'Para construir un canal',
+      'Para impedir que Walker recibiera refuerzos y suministros'
+    ],
+    answer: 3,
+    note: 'MEP CR · estrategia de la campaña',
+  },
+  {
+    id: 't-p-03', category: 'tactica', level: 'primaria', difficulty: 2,
+    question: '¿Qué ventaja tenían los filibusteros sobre los soldados centroamericanos?',
+    options: [
+      'Tenían armas de fuego más modernas',
+      'Eran más numerosos',
+      'Conocían mejor el terreno',
+      'Tenían apoyo de otros países centroamericanos'
+    ],
+    answer: 0,
+    note: 'Contenido regional',
+  },
 
-  // ═══════ TÁCTICA · SECUNDARIA ═══════════════════════════
-  { id:'ts01', category:'tactica', level:'secundaria', difficulty:2,
-    question:'¿Por qué la Ruta de Tránsito era estratégicamente vital para Walker?',
-    options:['Era la única carretera entre Nicaragua y Honduras','Conectaba Granada con el Atlántico','Era la vía por donde llegaban refuerzos y dinero de EE.UU.','Era la ruta oficial del ejército'], answer:2 },
-  { id:'ts02', category:'tactica', level:'secundaria', difficulty:3,
-    question:'¿En qué consistió la "guerra de desgaste" aplicada por los aliados?',
-    options:['Ataques frontales continuos','Cortar suministros, bloquear rutas y aislar a Walker hasta rendirlo','Bombardeo de Granada','Negociaciones diplomáticas'], answer:1 },
-  { id:'ts03', category:'tactica', level:'secundaria', difficulty:2,
-    question:'¿Por qué los aliados quemaron Granada antes de retirarse?',
-    options:['Para castigar a civiles','Por orden de EE.UU.','Fue accidental','Para negar a Walker una base de recursos y su símbolo de poder'], answer:3 },
-  { id:'ts04', category:'tactica', level:'secundaria', difficulty:2,
-    question:'¿Qué ventaja táctica daba controlar el Lago de Nicaragua?',
-    options:['Dominar la principal vía de comunicación y transporte de la región','Fuente de agua potable','Reserva de pesca para los ejércitos','Era solo simbólico'], answer:0 },
-  { id:'ts05', category:'tactica', level:'secundaria', difficulty:3,
-    question:'¿Por qué la Hacienda Santa Rosa era un punto estratégico para Costa Rica?',
-    options:['Era el cuartel general del ejército','Tenía el único arsenal del país','Era el único paso terrestre hacia Nicaragua por el lado costarricense','Era residencia del presidente Mora'], answer:2 },
-  { id:'ts06', category:'tactica', level:'secundaria', difficulty:3,
-    question:'¿Qué error táctico cometió Walker al permanecer en Rivas en 1857?',
-    options:['Atacó demasiado pronto','Quedó rodeado sin suministros ni posibilidad de escape o refuerzos','Dispersó demasiado sus fuerzas','Confió en una tregua falsa'], answer:1 },
+  // ═══════════════════════════════════════════════
+  // TÁCTICA — SECUNDARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 't-s-01', category: 'tactica', level: 'secundaria', difficulty: 2,
+    question: '¿Por qué la Ruta de Tránsito era estratégicamente vital para Walker?',
+    options: [
+      'Era la única carretera entre Nicaragua y Honduras',
+      'Conectaba Granada con el Atlántico directamente',
+      'Era la vía por donde llegaban refuerzos y dinero de EE.UU. a través de Nicaragua',
+      'Era la ruta oficial del ejército nicaragüense'
+    ],
+    answer: 2,
+    note: 'MEP CR · 9no grado · economía y guerra',
+  },
+  {
+    id: 't-s-02', category: 'tactica', level: 'secundaria', difficulty: 3,
+    question: '¿Qué fue la "guerra de desgaste" aplicada por los aliados contra Walker?',
+    options: [
+      'Ataques frontales continuos con toda la tropa',
+      'Cortar suministros, bloquear rutas y aislar a Walker hasta que no pudiera sostenerse',
+      'Bombardeo constante de Granada',
+      'Negociaciones diplomáticas prolongadas',
+    ],
+    answer: 1,
+    note: 'MEP CR · 9no grado · estrategia militar',
+  },
+  {
+    id: 't-s-03', category: 'tactica', level: 'secundaria', difficulty: 2,
+    question: '¿Por qué los aliados decidieron quemar Granada antes de retirarse?',
+    options: [
+      'Para castigar a la población civil',
+      'Por orden del gobierno de EE.UU.',
+      'Fue un incendio accidental',
+      'Para negar a Walker una base de recursos y su símbolo de poder'
+    ],
+    answer: 3,
+    note: 'MINED NI · táctica de tierra quemada',
+  },
 
-  // ═══════ GEOGRAFÍA · PRIMARIA ════════════════════════════
-  { id:'gp01', category:'geografia', level:'primaria', difficulty:1,
-    question:'¿Qué río conecta el lago de Nicaragua con el océano Atlántico?',
-    options:['Río Grande','Río Coco','Río Tempisque','Río San Juan'], answer:3 },
-  { id:'gp02', category:'geografia', level:'primaria', difficulty:1,
-    question:'¿En qué país está la ciudad de Rivas, escenario de batallas clave?',
-    options:['Nicaragua','Costa Rica','Honduras','Guatemala'], answer:0 },
-  { id:'gp03', category:'geografia', level:'primaria', difficulty:1,
-    question:'¿Cuántos países forman Centroamérica?',
-    options:['4','5','7','6'], answer:2 },
-  { id:'gp04', category:'geografia', level:'primaria', difficulty:1,
-    question:'¿Cuál es el lago más grande de Centroamérica?',
-    options:['Lago de Managua','Lago de Nicaragua','Lago Atitlán','Lago Gatún'], answer:1 },
-  { id:'gp05', category:'geografia', level:'primaria', difficulty:2,
-    question:'¿Cuál era la capital de Costa Rica durante la Campaña Nacional?',
-    options:['Cartago','Heredia','Alajuela','San José'], answer:3 },
-  { id:'gp06', category:'geografia', level:'primaria', difficulty:2,
-    question:'¿En qué océano desemboca el Río San Juan?',
-    options:['Atlántico (Caribe)','Pacífico','Ártico','Índico'], answer:0 },
-  { id:'gp07', category:'geografia', level:'primaria', difficulty:2,
-    question:'¿Cuál era el principal puerto del Pacífico de Costa Rica en 1856?',
-    options:['Puerto Limón','Quepos','Puntarenas','Golfito'], answer:2 },
-  { id:'gp08', category:'geografia', level:'primaria', difficulty:2,
-    question:'¿En qué región de Nicaragua está la ciudad de Granada?',
-    options:['Norte','Sur, cerca del lago de Nicaragua','Costa Caribe','Oeste, en la frontera con Honduras'], answer:1 },
+  // ═══════════════════════════════════════════════
+  // GEOGRAFÍA — PRIMARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'g-p-01', category: 'geografia', level: 'primaria', difficulty: 1,
+    question: '¿Qué río conecta el lago de Nicaragua con el océano Atlántico?',
+    options: ['Río San Juan', 'Río Grande', 'Río Coco', 'Río Tempisque'],
+    answer: 0,
+    note: 'MEP CR · geografía regional',
+  },
+  {
+    id: 'g-p-02', category: 'geografia', level: 'primaria', difficulty: 1,
+    question: '¿En qué país está la ciudad de Rivas, donde se libró una batalla clave?',
+    options: ['Costa Rica', 'Honduras', 'Nicaragua', 'Guatemala'],
+    answer: 2,
+    note: 'MINED NI · geografía histórica',
+  },
+  {
+    id: 'g-p-03', category: 'geografia', level: 'primaria', difficulty: 1,
+    question: '¿Cuántos países forman Centroamérica?',
+    options: ['4', '7', '5', '6'],
+    answer: 1,
+    note: 'Contenido básico regional',
+  },
+  {
+    id: 'g-p-04', category: 'geografia', level: 'primaria', difficulty: 2,
+    question: '¿Cuál es el lago más grande de Centroamérica, importante en la campaña?',
+    options: ['Lago de Managua', 'Lago Atitlán', 'Lago Gatún', 'Lago de Nicaragua'],
+    answer: 3,
+    note: 'MINED NI · geografía',
+  },
+  {
+    id: 'g-p-05', category: 'geografia', level: 'primaria', difficulty: 2,
+    question: '¿Qué ciudad fue la capital de Costa Rica durante la Campaña Nacional?',
+    options: ['San José', 'Cartago', 'Heredia', 'Alajuela'],
+    answer: 0,
+    note: 'MEP CR',
+  },
 
-  // ═══════ GEOGRAFÍA · SECUNDARIA ══════════════════════════
-  { id:'gs01', category:'geografia', level:'secundaria', difficulty:2,
-    question:'¿Por qué el istmo de Rivas era estratégicamente vital en 1856?',
-    options:['Era la capital de Nicaragua','Tenía las mejores tierras agrícolas','Era la única frontera con Costa Rica','Era el paso más corto entre el lago de Nicaragua y el océano Pacífico'], answer:3 },
-  { id:'gs02', category:'geografia', level:'secundaria', difficulty:2,
-    question:'¿Qué ruta usaban los pasajeros de EE.UU. para cruzar de Atlántico a Pacífico por Nicaragua?',
-    options:['La Ruta de Tránsito por Río San Juan y lago de Nicaragua','El Canal de Panamá','El Camino Real colonial','La ruta por Honduras'], answer:0 },
-  { id:'gs03', category:'geografia', level:'secundaria', difficulty:3,
-    question:'¿Cuál era la importancia económica global de Nicaragua en los años 1850?',
-    options:['Mayor productor de café del mundo','Mayores reservas de oro de América','Ofrecía la ruta más rápida entre Atlántico y Pacífico antes del Canal de Panamá','Principal socio de Gran Bretaña en el Caribe'], answer:2 },
-  { id:'gs04', category:'geografia', level:'secundaria', difficulty:2,
-    question:'¿Cuál es la capital de Honduras, país que participó en la Campaña Nacional?',
-    options:['San Pedro Sula','Tegucigalpa','Comayagua','La Ceiba'], answer:1 },
-  { id:'gs05', category:'geografia', level:'secundaria', difficulty:2,
-    question:'¿Por qué el Río San Juan era estratégico para ambos bandos?',
-    options:['Era la frontera oficial entre Nicaragua y Costa Rica','Era el único río navegable de Centroamérica','Tenía depósitos de oro','Conectaba el lago de Nicaragua con el Atlántico, pieza clave de la Ruta de Tránsito'], answer:3 },
+  // ═══════════════════════════════════════════════
+  // GEOGRAFÍA — SECUNDARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'g-s-01', category: 'geografia', level: 'secundaria', difficulty: 2,
+    question: '¿Por qué el istmo de Rivas era estratégicamente vital en 1856?',
+    options: [
+      'Era la capital de Nicaragua',
+      'Tenía las mejores tierras agrícolas de la región',
+      'Era el paso más corto entre el lago de Nicaragua y el océano Pacífico en la Ruta de Tránsito',
+      'Era la única frontera terrestre entre Nicaragua y Costa Rica'
+    ],
+    answer: 2,
+    note: 'MEP CR · MINED NI · geografía estratégica',
+  },
+  {
+    id: 'g-s-02', category: 'geografia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué ruta usaban los pasajeros de EE.UU. para cruzar de Atlántico a Pacífico por Nicaragua?',
+    options: ['El Canal de Panamá', 'La Ruta de Tránsito por el Río San Juan y lago de Nicaragua', 'El Camino Real colonial', 'La ruta por Honduras'],
+    answer: 1,
+    note: 'MEP CR · economía e imperialismo',
+  },
+  {
+    id: 'g-s-03', category: 'geografia', level: 'secundaria', difficulty: 3,
+    question: '¿Cuál era la importancia económica global de Nicaragua en la década de 1850?',
+    options: [
+      'Era el mayor productor de café del mundo',
+      'Tenía las mayores reservas de oro de América',
+      'Era el principal socio comercial de Gran Bretaña en el Caribe',
+      'Ofrecía la ruta de tránsito más rápida entre el Atlántico y el Pacífico antes del Canal de Panamá'
+    ],
+    answer: 3,
+    note: 'MEP CR · 9no grado · contexto global',
+  },
 
-  // ═══════ ARMAS · PRIMARIA ════════════════════════════════
-  { id:'ap01', category:'armas', level:'primaria', difficulty:1,
-    question:'¿Qué arma cuerpo a cuerpo usaban casi todos los soldados centroamericanos?',
-    options:['Machete','Lanza','Espada','Hacha'], answer:0 },
-  { id:'ap02', category:'armas', level:'primaria', difficulty:1,
-    question:'¿Cuál era la principal arma de fuego de la infantería en 1856?',
-    options:['Pistola','Metralleta','Fusil de avancarga','Arco y flecha'], answer:2 },
-  { id:'ap03', category:'armas', level:'primaria', difficulty:2,
-    question:'¿Qué usó Andrés Castro cuando se quedó sin munición en San Jacinto?',
-    options:['Su espada','Una piedra','Un cuchillo','Un palo'], answer:1 },
-  { id:'ap04', category:'armas', level:'primaria', difficulty:2,
-    question:'¿Para qué usaban el machete los soldados centroamericanos además del combate?',
-    options:['Para cocinar','Para señalar al enemigo','Para construir puentes','Para abrir caminos en la selva y recolectar alimentos'], answer:3 },
+  // ═══════════════════════════════════════════════
+  // ARMAS — PRIMARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'a-p-01', category: 'armas', level: 'primaria', difficulty: 1,
+    question: '¿Qué arma cuerpo a cuerpo usaban casi todos los soldados centroamericanos?',
+    options: ['Machete', 'Lanza', 'Espada', 'Hacha'],
+    answer: 0,
+    note: 'Contenido regional · armamento básico',
+  },
+  {
+    id: 'a-p-02', category: 'armas', level: 'primaria', difficulty: 2,
+    question: '¿Cuál era la principal arma de fuego de los soldados de infantería en 1856?',
+    options: ['Pistola', 'Metralleta', 'Fusil de avancarga', 'Arco y flecha'],
+    answer: 2,
+    note: 'Armamento histórico básico',
+  },
 
-  // ═══════ ARMAS · SECUNDARIA ══════════════════════════════
-  { id:'as01', category:'armas', level:'secundaria', difficulty:2,
-    question:'¿Qué ventaja tenía la bala Minié sobre los proyectiles anteriores?',
-    options:['Mayor alcance y precisión por ser cónica y expandirse en el cañón rayado','Era más barata','No necesitaba pólvora','Podía dispararse bajo el agua'], answer:0 },
-  { id:'as02', category:'armas', level:'secundaria', difficulty:3,
-    question:'¿Cuál era la diferencia táctica entre un fusil de avancarga y uno de retrocarga?',
-    options:['El retrocarga no necesitaba pólvora','El avancarga era más preciso','El retrocarga se cargaba más rápido desde la culata aumentando la cadencia','No había diferencia práctica'], answer:2 },
-  { id:'as03', category:'armas', level:'secundaria', difficulty:2,
-    question:'¿Qué tipo de artillería se usó en la Batalla de Rivas?',
-    options:['Obús Howitzer de trinchera','Cañón de campaña de 6 libras','Mortero de 12 libras','Cañón naval autopropulsado'], answer:1 },
-  { id:'as04', category:'armas', level:'secundaria', difficulty:3,
-    question:'¿Por qué los filibusteros tenían ventaja en armamento sobre los ejércitos aliados?',
-    options:['Eran más numerosos','Tenían apoyo naval','Conocían mejor el terreno','Usaban rifles de percusión más modernos y con mayor cadencia de fuego'], answer:3 },
+  // ═══════════════════════════════════════════════
+  // ARMAS — SECUNDARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'a-s-01', category: 'armas', level: 'secundaria', difficulty: 2,
+    question: '¿Qué ventaja tenía la bala Minié usada en el conflicto?',
+    options: [
+      'Era más barata de fabricar',
+      'Mayor alcance y precisión al ser cónica y expandirse en el cañón rayado',
+      'No necesitaba pólvora',
+      'Podía dispararse bajo el agua',
+    ],
+    answer: 1,
+    note: 'Tecnología militar del siglo XIX',
+  },
+  {
+    id: 'a-s-02', category: 'armas', level: 'secundaria', difficulty: 3,
+    question: '¿Cuál era la diferencia táctica entre un fusil de avancarga y uno de retrocarga?',
+    options: [
+      'El retrocarga no necesitaba pólvora',
+      'El avancarga era más preciso a larga distancia',
+      'No había diferencia práctica en combate',
+      'El retrocarga se cargaba más rápido desde la culata, aumentando la cadencia de fuego'
+    ],
+    answer: 3,
+    note: 'Tecnología militar · siglo XIX',
+  },
 
-  // ═══════ UNIFORMES · PRIMARIA ════════════════════════════
-  { id:'up01', category:'uniformes', level:'primaria', difficulty:1,
-    question:'¿De qué color era el uniforme básico de la infantería costarricense en 1856?',
-    options:['Blanco','Azul','Verde','Rojo'], answer:0 },
-  { id:'up02', category:'uniformes', level:'primaria', difficulty:2,
-    question:'¿Qué accesorio identificaba a un oficial de alto rango en los ejércitos aliados?',
-    options:['Una capa roja','Un sombrero de plumas','Galones y charreteras en el uniforme','Una espada dorada'], answer:2 },
-  { id:'up03', category:'uniformes', level:'primaria', difficulty:2,
-    question:'¿Qué colores tenía la bandera de la antigua Federación Centroamericana?',
-    options:['Rojo, blanco y azul','Azul, blanco y azul','Verde, blanco y rojo','Amarillo, azul y rojo'], answer:1 },
+  // ═══════════════════════════════════════════════
+  // UNIFORMES — PRIMARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'u-p-01', category: 'uniformes', level: 'primaria', difficulty: 1,
+    question: '¿De qué color era el uniforme básico de la infantería costarricense en 1856?',
+    options: ['Blanco', 'Azul', 'Verde', 'Rojo'],
+    answer: 0,
+    note: 'MEP CR · iconografía histórica',
+  },
+  {
+    id: 'u-p-02', category: 'uniformes', level: 'primaria', difficulty: 2,
+    question: '¿Qué accesorio identificaba al oficial de mayor rango en los ejércitos aliados?',
+    options: ['Una capa roja', 'Un sombrero de plumas', 'Galones y charreteras en el uniforme', 'Una espada dorada'],
+    answer: 2,
+    note: 'Iconografía militar del siglo XIX',
+  },
 
-  // ═══════ UNIFORMES · SECUNDARIA ══════════════════════════
-  { id:'us01', category:'uniformes', level:'secundaria', difficulty:2,
-    question:'¿Qué simbolizaban los colores azul y blanco en los uniformes de los ejércitos aliados?',
-    options:['El océano y las nubes','Alianza con Gran Bretaña','Los colores de la Iglesia Católica','Los colores de la antigua Federación Centroamericana'], answer:3 },
-  { id:'us02', category:'uniformes', level:'secundaria', difficulty:3,
-    question:'¿Por qué los filibusteros usaban ropa civil mezclada con uniformes militares?',
-    options:['Eran mercenarios irregulares sin logística formal ni uniformes estandarizados','Por tradición del ejército de EE.UU.','El clima lo impedía','Walker lo prohibió tácticamente'], answer:0 },
-  { id:'us03', category:'uniformes', level:'secundaria', difficulty:2,
-    question:'¿Qué elemento del uniforme identificaba al Batallón Voluntarios de Costa Rica?',
-    options:['Un escudo en el pecho','Las botas de cuero negro','La escarapela tricolor en el sombrero','El fusil con bayoneta plateada'], answer:2 },
+  // ═══════════════════════════════════════════════
+  // UNIFORMES — SECUNDARIA
+  // ═══════════════════════════════════════════════
+  {
+    id: 'u-s-01', category: 'uniformes', level: 'secundaria', difficulty: 2,
+    question: '¿Qué simbolizaban los colores azul y blanco en los uniformes de los ejércitos aliados?',
+    options: [
+      'Los colores del océano y las nubes centroamericanas',
+      'Los colores de la bandera de la antigua Federación Centroamericana',
+      'Alianza con Gran Bretaña',
+      'Los colores de la Iglesia Católica',
+    ],
+    answer: 1,
+    note: 'Identidad regional centroamericana',
+  },
+  {
+    id: 'u-s-02', category: 'uniformes', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué los filibusteros usaban ropa civil mezclada con uniformes militares?',
+    options: [
+      'Por tradición del ejército de EE.UU.',
+      'El clima tropical impedía usar uniformes',
+      'Walker prohibió los uniformes por razones tácticas',
+      'Eran mercenarios irregulares sin logística militar formal ni uniformes estandarizados'
+    ],
+    answer: 3,
+    note: 'Historia militar · fuerzas irregulares',
+  },
 
-  // ═══════ HISTORIA AVANZADA · SECUNDARIA ══════════════════
-  { id:'hx01', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Cuál fue el primer acto oficial de Walker como "presidente" de Nicaragua?',
-    options:['Declarar la guerra a Costa Rica','Reinstaurar la esclavitud y hacer el inglés idioma oficial','Disolver el ejército nicaragüense','Firmar un tratado con EE.UU.'], answer:1 },
-  { id:'hx02', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Qué rol jugaron las mujeres costarricenses durante la Campaña Nacional?',
-    options:['No participaron','Comandaron batallones auxiliares','Sirvieron como espías en Nicaragua','Atendieron heridos, cosieron uniformes y recaudaron fondos para el ejército'], answer:3 },
-  { id:'hx03', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Por qué Walker intentó una segunda expedición a Centroamérica en 1860?',
-    options:['Quería recuperar Nicaragua y cumplir su sueño imperialista','Fue enviado por el gobierno de EE.UU.','Buscaba oro en Honduras','Quería vengarse de Mora personalmente'], answer:0 },
-  { id:'hx04', category:'historia', level:'secundaria', difficulty:3,
-    question:'¿Qué país capturó a Walker en su segunda expedición y lo fusiló?',
-    options:['Nicaragua','Costa Rica','Honduras','Guatemala'], answer:2 },
-  { id:'hx05', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué institución de Costa Rica lleva el nombre del héroe Juan Santamaría?',
-    options:['La Universidad Nacional','El aeropuerto internacional de San José','El Museo Nacional','El Banco Central'], answer:1 },
-  { id:'hx06', category:'historia', level:'secundaria', difficulty:2,
-    question:'¿Qué día celebra Costa Rica el Día de Juan Santamaría?',
-    options:['15 de septiembre','20 de marzo','1 de mayo','11 de abril'], answer:3 },
-  { id:'hx07', category:'tactica', level:'secundaria', difficulty:3,
-    question:'¿Cómo logró Costa Rica controlar el Río San Juan en 1857?',
-    options:['Capturando los vapores de la compañía de tránsito de Vanderbilt','Con ayuda naval inglesa','Construyendo una presa','Con una operación de caballería'], answer:0 },
-  { id:'hx08', category:'geografia', level:'secundaria', difficulty:3,
-    question:'¿En qué departamento de Nicaragua ocurrió la Batalla de San Jacinto?',
-    options:['Managua','Granada','Matagalpa','Rivas'], answer:2 },
-  { id:'hx09', category:'historia', level:'primaria', difficulty:2,
-    question:'¿Qué le pasó a Juan Santamaría en la Batalla de Rivas?',
-    options:['Fue capturado','Murió al prender fuego al mesón enemigo','Huyó con su batallón','Fue ascendido a general'], answer:1 },
-  { id:'hx10', category:'historia', level:'primaria', difficulty:1,
-    question:'¿Por qué la Campaña Nacional es importante para todos los países de Centroamérica?',
-    options:['Porque la ganó un solo país','Porque contaron con ayuda de Europa','Porque terminó sin violencia','Porque fue una victoria de todos los países centroamericanos juntos'], answer:3 },
+  // ═══════════════════════════════════════════════
+  // HISTORIA — NUEVAS (primaria + secundaria)
+  // ═══════════════════════════════════════════════
+  {
+    id: 'h-p-11', category: 'historia', level: 'primaria', difficulty: 1,
+    question: '¿Qué enfermedad mató a muchos soldados costarricenses durante la Campaña Nacional?',
+    options: ['Cólera', 'Malaria', 'Viruela', 'Fiebre amarilla'],
+    answer: 0,
+    note: 'MEP CR · consecuencias sanitarias de la campaña',
+  },
+  {
+    id: 'h-p-12', category: 'historia', level: 'primaria', difficulty: 2,
+    question: '¿Qué país centroamericano se unió a la coalición aliada pero llegó más tarde al conflicto?',
+    options: ['Costa Rica', 'Belice', 'Guatemala', 'Panamá'],
+    answer: 2,
+    note: 'Coalición centroamericana',
+  },
+  {
+    id: 'h-s-11', category: 'historia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué potencia extranjera bloqueó el río San Juan para debilitar a Walker en 1857?',
+    options: ['Francia', 'Gran Bretaña', 'España', 'Estados Unidos (gobierno federal)'],
+    answer: 1,
+    note: 'Geopolítica del conflicto · intereses en la ruta interoceánica',
+  },
+  {
+    id: 'h-s-12', category: 'historia', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué la ruta del río San Juan era estratégicamente vital para Walker?',
+    options: [
+      'Era la única fuente de agua potable en Nicaragua',
+      'Unía las capitales de Nicaragua y Costa Rica',
+      'Era la frontera natural reconocida por Gran Bretaña',
+      'Controlaba el tránsito interoceánico y el suministro de tropas y armas desde EE.UU.'
+    ],
+    answer: 3,
+    note: 'Estrategia · Compañía Accesoria del Tránsito',
+  },
+
+  // ═══════════════════════════════════════════════
+  // TÁCTICA — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 't-p-04', category: 'tactica', level: 'primaria', difficulty: 1,
+    question: '¿Qué ventaja tenían los aliados al conocer mejor la geografía del terreno centroamericano?',
+    options: [
+      'Podían moverse más rápido por caminos conocidos y emboscar al enemigo',
+      'Tenían mejores uniformes',
+      'Sus rifles eran más modernos',
+      'Recibían apoyo aéreo',
+    ],
+    answer: 0,
+    note: 'Táctica · ventaja del terreno propio',
+  },
+  {
+    id: 't-s-04', category: 'tactica', level: 'secundaria', difficulty: 2,
+    question: '¿Por qué los aliados optaron por incendiar Rivas en lugar de atacarla frontalmente?',
+    options: [
+      'Por error durante el combate',
+      'Órdenes directas de Walker',
+      'Para destruir los depósitos de alimentos y municiones filibusteras',
+      'Para señalizar la posición a otras tropas aliadas'
+    ],
+    answer: 2,
+    note: 'Táctica · batalla de Rivas · acción de Juan Santamaría',
+  },
+  {
+    id: 't-s-05', category: 'tactica', level: 'secundaria', difficulty: 3,
+    question: '¿Qué táctica usaron los ejércitos aliados para cortar el suministro de Walker sin combate directo prolongado?',
+    options: [
+      'Bloqueo de puertos del Pacífico',
+      'Cerco y bloqueo del río San Juan, cortando refuerzos y provisiones',
+      'Alianza con tribus indígenas del interior',
+      'Destrucción de los cañones filibusteros',
+    ],
+    answer: 1,
+    note: 'Estrategia de sitio · coalición centroamericana',
+  },
+  {
+    id: 't-p-05', category: 'tactica', level: 'primaria', difficulty: 2,
+    question: '¿Cuál fue la estrategia principal de Costa Rica al inicio de la campaña en 1856?',
+    options: [
+      'Esperar a que Walker atacara primero',
+      'Pedir ayuda a España',
+      'Bloquear los puertos del Pacífico',
+      'Avanzar rápidamente para sorprender a los filibusteros en Santa Rosa'
+    ],
+    answer: 3,
+    note: 'MEP CR · Campaña de 1856 · marcha hacia Santa Rosa',
+  },
+
+  // ═══════════════════════════════════════════════
+  // GEOGRAFÍA — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'g-p-06', category: 'geografia', level: 'primaria', difficulty: 1,
+    question: '¿Qué lago nicaragüense era clave para el control del territorio durante la campaña?',
+    options: ['Lago de Nicaragua (Cocibolca)', 'Lago de Managua', 'Lago Arenal', 'Lago Gatún'],
+    answer: 0,
+    note: 'Geografía · Nicaragua · ruta interoceánica',
+  },
+  {
+    id: 'g-p-07', category: 'geografia', level: 'primaria', difficulty: 2,
+    question: '¿Por qué ciudad nicaragüense estableció Walker su capital y base de operaciones?',
+    options: ['Managua', 'León', 'Granada', 'Masaya'],
+    answer: 2,
+    note: 'Granada · capital filibustera',
+  },
+  {
+    id: 'g-s-04', category: 'geografia', level: 'secundaria', difficulty: 2,
+    question: '¿Qué río forma parte de la frontera entre Costa Rica y Nicaragua y fue escenario de operaciones militares?',
+    options: ['Río Tempisque', 'Río San Juan', 'Río Reventazón', 'Río Sarapiquí'],
+    answer: 1,
+    note: 'Geografía · frontera · ruta interoceánica',
+  },
+  {
+    id: 'g-s-05', category: 'geografia', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué la hacienda Santa Rosa era una posición geográficamente estratégica para detener el avance filibustero?',
+    options: [
+      'Tenía una fortaleza colonial construida por España',
+      'Estaba en la cima de una montaña con visión de 360°',
+      'Poseía el único pozo de agua en la región',
+      'Era el único paso natural entre Guanacaste y el interior de Costa Rica'
+    ],
+    answer: 3,
+    note: 'MEP CR · Batalla de Santa Rosa · geografía de Guanacaste',
+  },
+
+  // ═══════════════════════════════════════════════
+  // ARMAS — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'a-p-03', category: 'armas', level: 'primaria', difficulty: 1,
+    question: '¿Qué arma blanca era común entre los soldados centroamericanos durante la Campaña Nacional?',
+    options: ['Machete', 'Sable de caballería', 'Bayoneta francesa', 'Hacha de guerra'],
+    answer: 0,
+    note: 'Armamento · infantería centroamericana',
+  },
+  {
+    id: 'a-p-04', category: 'armas', level: 'primaria', difficulty: 2,
+    question: '¿Qué tipo de artillería usaban los ejércitos aliados centroamericanos principalmente?',
+    options: ['Morteros de sitio', 'Artillería naval', 'Cañones de campaña tirados por caballos', 'No usaban artillería'],
+    answer: 2,
+    note: 'Armamento · artillería de campaña siglo XIX',
+  },
+  {
+    id: 'a-s-03', category: 'armas', level: 'secundaria', difficulty: 2,
+    question: '¿Qué ventaja táctica daba el rifle de percusión sobre el mosquete de chispa en la época de la campaña?',
+    options: [
+      'Era más pesado y causaba más daño',
+      'Mayor alcance, precisión y fiabilidad en condiciones húmedas tropicales',
+      'Podía disparar más rápido en salvas',
+      'No necesitaba pólvora negra',
+    ],
+    answer: 1,
+    note: 'Historia del armamento · siglo XIX',
+  },
+  {
+    id: 'a-s-04', category: 'armas', level: 'secundaria', difficulty: 3,
+    question: '¿Por qué los filibusteros de Walker tenían ventaja armamentística inicial sobre las fuerzas aliadas?',
+    options: [
+      'Eran entrenados por el ejército prusiano',
+      'Contaban con apoyo de artillería naval británica',
+      'Usaban explosivos que los aliados desconocían',
+      'Traían rifles modernos y experiencia de combate de las guerras civiles estadounidenses'
+    ],
+    answer: 3,
+    note: 'Historia militar · ventaja filibustera inicial',
+  },
+
+  // ═══════════════════════════════════════════════
+  // UNIFORMES — NUEVAS
+  // ═══════════════════════════════════════════════
+  {
+    id: 'u-p-03', category: 'uniformes', level: 'primaria', difficulty: 1,
+    question: '¿De qué color era el uniforme de los soldados costarricenses durante la Campaña Nacional?',
+    options: ['Azul y blanco', 'Rojo y amarillo', 'Verde olivo', 'Negro'],
+    answer: 0,
+    note: 'MEP CR · uniformes históricos costarricenses',
+  },
+  {
+    id: 'u-p-04', category: 'uniformes', level: 'primaria', difficulty: 2,
+    question: '¿Qué tipo de sombrero usaban típicamente los soldados de infantería aliados en 1856?',
+    options: ['Casco de metal', 'Sombrero de copa alta', 'Quepis (kepí) de tela', 'Turbante'],
+    answer: 2,
+    note: 'Uniformes militares centroamericanos siglo XIX',
+  },
+  {
+    id: 'u-s-03', category: 'uniformes', level: 'secundaria', difficulty: 2,
+    question: '¿Qué elemento del uniforme diferenciaba a los oficiales de los soldados rasos en los ejércitos aliados?',
+    options: [
+      'El color del pantalón',
+      'Las charreteras, galones en la manga y tipo de sable',
+      'El tamaño de la mochila',
+      'El número de botones en el capote',
+    ],
+    answer: 1,
+    note: 'Jerarquía militar · uniformes del siglo XIX',
+  },
+  {
+    id: 'u-s-04', category: 'uniformes', level: 'secundaria', difficulty: 3,
+    question: '¿Cómo influyó el clima tropical centroamericano en el diseño práctico de los uniformes aliados?',
+    options: [
+      'Se copiaron exactamente los uniformes europeos sin modificación',
+      'Se usaron pieles de animales locales',
+      'El clima no tuvo ningún efecto en el diseño de uniformes',
+      'Se adoptaron telas ligeras de algodón y colores claros para soportar el calor y la humedad'
+    ],
+    answer: 3,
+    note: 'Adaptación de uniformes · condiciones tropicales',
+  },
 ];
 
-// ── Tracker de preguntas ya usadas (para evitar repetición) ──
+// ── Memoria de preguntas usadas (sin repetición) ─────────────
 const _usedIds = new Set();
 
-export function resetUsedQuestions() {
-  _usedIds.clear();
+function _markUsed(id) {
+  _usedIds.add(id);
 }
 
-export function getRandomQuestion(category = null, level = null) {
-  let pool = TRIVIA_QUESTIONS;
-  if (category) pool = pool.filter(q => q.category === category);
-  if (level)    pool = pool.filter(q => q.level    === level);
-  if (!pool.length) pool = TRIVIA_QUESTIONS;
-
-  // Preferir preguntas no usadas
-  const unused = pool.filter(q => !_usedIds.has(q.id));
-  const source  = unused.length > 0 ? unused : pool; // si se acaban, reusar
-
-  const q = source[Math.floor(Math.random() * source.length)];
-  _usedIds.add(q.id);
-  return q;
+function _resetIfExhausted(pool) {
+  // Si todas las preguntas del pool ya fueron usadas, reiniciar solo ese pool
+  const allUsed = pool.every(q => _usedIds.has(q.id));
+  if (allUsed) {
+    pool.forEach(q => _usedIds.delete(q.id));
+  }
 }
+
+// ── Utilidades ──────────────────────────────────────────────
 
 export function getQuestionsByCategory(category) {
   return TRIVIA_QUESTIONS.filter(q => q.category === category);
@@ -293,10 +672,28 @@ export function getQuestionsByLevel(level) {
   return TRIVIA_QUESTIONS.filter(q => q.level === level);
 }
 
+export function getRandomQuestion(category = null, level = null) {
+  let pool = TRIVIA_QUESTIONS;
+  if (category) pool = pool.filter(q => q.category === category);
+  if (level)    pool = pool.filter(q => q.level === level);
+  if (pool.length === 0) pool = TRIVIA_QUESTIONS; // fallback
+
+  // Evitar repetición — filtrar ya usadas
+  _resetIfExhausted(pool);
+  const available = pool.filter(q => !_usedIds.has(q.id));
+  const chosen = available.length > 0
+    ? available[Math.floor(Math.random() * available.length)]
+    : pool[Math.floor(Math.random() * pool.length)]; // último recurso
+
+  _markUsed(chosen.id);
+  return chosen;
+}
+
+// Categoría → tipo de bono
 export const CATEGORY_BONUS_TYPE = {
-  historia:  'combat',
-  tactica:   'combat',
-  geografia: 'move',
-  armas:     'estetic',
-  uniformes: 'estetic',
+  historia:   'combat',
+  tactica:    'combat',
+  geografia:  'move',
+  armas:      'estetic',
+  uniformes:  'estetic',
 };

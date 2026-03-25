@@ -476,7 +476,40 @@ export class MapScene extends Phaser.Scene {
   }
 
   // ──────────────────────────────────────────────────────────
-  // TRIVIA PHASE — Sprint 3: modal real con temporizador
+  // TRIVIA contextual: detecta situación y elige categoría
+  // ──────────────────────────────────────────────────────────
+  _getTriviaCategory() {
+    // ¿Hay unidades aliadas adyacentes a algún filibustero?
+    const allied = this.peons.filter(p => p.side === 'aliado');
+    const enemy  = this.peons.filter(p => p.side === 'filibustero');
+
+    const adjacent = allied.some(a =>
+      enemy.some(e => {
+        const dc = Math.abs(a.col - e.col);
+        const dr = Math.abs(a.row - e.row);
+        return dc <= 1 && dr <= 1 && (dc + dr) <= 2;
+      })
+    );
+
+    if (adjacent) {
+      // Cerca de combate → historia o táctica (bono combate)
+      return Math.random() < 0.5 ? 'historia' : 'tactica';
+    }
+
+    // ¿Hay muchos aliados aún lejos del frente? → geografía
+    // Heurística: si la mayoría de aliados están en cols < 8 (zona sur)
+    const avgCol = allied.reduce((s, u) => s + u.col, 0) / (allied.length || 1);
+    if (avgCol < 9) {
+      return 'geografia';
+    }
+
+    // En cualquier otro caso → armas o uniformes (estético), o historia
+    const misc = ['armas', 'uniformes', 'historia'];
+    return misc[Math.floor(Math.random() * misc.length)];
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // TRIVIA PHASE — modal con categoría contextual
   // ──────────────────────────────────────────────────────────
   async startTriviaPhase() {
     this.setPhaseLabel('trivia');
@@ -486,7 +519,8 @@ export class MapScene extends Phaser.Scene {
     // Pequeña pausa antes de mostrar el modal
     await this.sleep(500);
 
-    const result = await this.trivia.ask(); // muestra modal, espera respuesta
+    const category = this._getTriviaCategory();
+    const result = await this.trivia.ask(category); // muestra modal, espera respuesta
 
     const { bonusType, bonusAmount, correct, category } = result;
 
