@@ -1,59 +1,50 @@
+// ============================================================
+// PRELOAD SCENE — Carga de assets + barra de progreso
+// ============================================================
 import Phaser from 'phaser';
 
 export class PreloadScene extends Phaser.Scene {
-  constructor() {
-    super({ key: 'PreloadScene' });
-  }
+  constructor() { super({ key: 'PreloadScene' }); }
 
   preload() {
-    // Loading bar
-    const width = this.scale.width;
-    const height = this.scale.height;
+    const W = this.scale.width;
+    const H = this.scale.height;
 
-    const progressBar = this.add.graphics();
-    const progressBox = this.add.graphics();
-    progressBox.fillStyle(0x2a1800, 0.8);
-    progressBox.fillRect(width / 2 - 160, height / 2 - 15, 320, 30);
+    // Fondo de carga
+    const bg = this.add.graphics();
+    bg.fillStyle(0x080400, 1);
+    bg.fillRect(0, 0, W, H);
 
-    const loadingText = this.add.text(width / 2, height / 2 - 50, 'Cargando...', {
-      fontFamily: 'Georgia',
-      fontSize: '18px',
-      color: '#d4a843',
-      letterSpacing: 4,
+    // Barra de progreso
+    const barBg = this.add.graphics();
+    barBg.fillStyle(0x1a0c00, 1);
+    barBg.fillRoundedRect(W/2 - 200, H/2 - 16, 400, 32, 6);
+    barBg.lineStyle(1, 0x5a3a10, 1);
+    barBg.strokeRoundedRect(W/2 - 200, H/2 - 16, 400, 32, 6);
+
+    const bar = this.add.graphics();
+    const label = this.add.text(W/2, H/2 + 32, 'Cargando...', {
+      fontFamily: 'Georgia', fontSize: '14px', color: '#806030',
     }).setOrigin(0.5);
 
-    const subtitleText = this.add.text(width / 2, height / 2 + 40, 'La Campaña Nacional 1856–1857', {
-      fontFamily: 'Georgia',
-      fontSize: '13px',
-      color: '#a07830',
-      letterSpacing: 3,
+    const title = this.add.text(W/2, H/2 - 60, 'LA CAMPAÑA NACIONAL', {
+      fontFamily: 'Georgia', fontSize: '28px', color: '#d4a843',
+      stroke: '#000', strokeThickness: 5,
     }).setOrigin(0.5);
 
-    this.load.on('progress', (value) => {
-      progressBar.clear();
-      progressBar.fillStyle(0xd4a843, 1);
-      progressBar.fillRect(width / 2 - 156, height / 2 - 11, 312 * value, 22);
+    this.load.on('progress', (v) => {
+      bar.clear();
+      bar.fillStyle(0xd4a843, 1);
+      bar.fillRoundedRect(W/2 - 196, H/2 - 12, 392 * v, 24, 4);
+      label.setText(`Cargando... ${Math.floor(v * 100)}%`);
     });
 
-    this.load.on('complete', () => {
-      progressBar.destroy();
-      progressBox.destroy();
-      loadingText.destroy();
-      subtitleText.destroy();
-    });
-
-    // Generate terrain textures procedurally (no external assets needed for Sprint 1)
-    this.generateTerrainTextures();
-  }
-
-  generateTerrainTextures() {
-    // We'll generate hex textures via Graphics in MapScene
-    // Just create a tiny placeholder key so PreloadScene has something to do
-    const g = this.make.graphics({ x: 0, y: 0, add: false });
-    g.fillStyle(0xffffff);
-    g.fillRect(0, 0, 1, 1);
-    g.generateTexture('pixel', 1, 1);
-    g.destroy();
+    // Mapa histórico 1856 — Library of Congress (dominio público)
+    // Mapa de Centroamérica de J. Baily, ~1850, incluye Nicaragua, Costa Rica, etc.
+    this.load.image(
+      'map_bg',
+      'https://tile.loc.gov/image-services/iiif/service:gmd:gmd4:g4800:g4800:ma001000/full/1200,/0/default.jpg'
+    );
   }
 
   create() {

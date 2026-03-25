@@ -317,7 +317,9 @@ export class GameScene extends Phaser.Scene {
     );
     this._turnLabel.setText(String(this.turn));
 
-    this.time.delayedCall(1200, () => this._showQuestion('walker'));
+    // Primaria: más tiempo para leer el contexto del nodo antes de la pregunta
+    const readDelay = this.level === 'primaria' ? 2800 : 1200;
+    this.time.delayedCall(readDelay, () => this._showQuestion('walker'));
   }
 
   _startAlliedQuestion() {
@@ -328,7 +330,8 @@ export class GameScene extends Phaser.Scene {
       `"${node.title}"\n${node.description}`,
       'Si aciertas → Aliados avanzan'
     );
-    this.time.delayedCall(1200, () => this._showQuestion('aliado'));
+    const readDelay = this.level === 'primaria' ? 2800 : 1200;
+    this.time.delayedCall(readDelay, () => this._showQuestion('aliado'));
   }
 
   _showQuestion(side) {
@@ -384,7 +387,7 @@ export class GameScene extends Phaser.Scene {
 
     const timerLbl = document.createElement('div');
     timerLbl.style.cssText = 'text-align:right;font-size:10px;color:#705020;margin-top:2px;margin-bottom:10px;';
-    timerLbl.textContent = '20s';
+    timerLbl.textContent = '…s'; // se actualiza al iniciar el timer
 
     // Pregunta
     const qEl = document.createElement('p');
@@ -438,8 +441,9 @@ export class GameScene extends Phaser.Scene {
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    // Timer
-    const TOTAL = 20000;
+    // Timer — primaria tiene más tiempo para leer y responder
+    const TOTAL = this.level === 'primaria' ? 30000 : 25000;
+    timerLbl.textContent = `${Math.ceil(TOTAL/1000)}s`;
     timerInt = setInterval(() => {
       const elapsed = performance.now() - startMs;
       const rem = Math.max(0, TOTAL - elapsed);
